@@ -5,14 +5,15 @@ import { useState, useMemo } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wrench, Search, Package, Users, Globe } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { ShoppingCart, Search, Package, Users, Globe, DraftingCompass } from 'lucide-react'; // Changed Wrench to ShoppingCart, added DraftingCompass
 import type { Part, Supplier } from '@/types/parts';
 import { PartCard } from '@/components/parts-catalog/part-card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 const initialPartsData: Part[] = [
   {
@@ -202,10 +203,40 @@ export default function PartsCatalogPage() {
   return (
     <div>
       <PageHeader
-        title="Catálogo Global de Piezas y Proveedores"
-        description="Explora un catálogo completo de piezas de karting, componentes, y encuentra proveedores."
-        icon={Wrench}
+        title="Marketplace de Piezas y Karts S4NT1"
+        description="Explora un catálogo completo de piezas de karting, componentes, y encuentra proveedores verificados."
+        icon={ShoppingCart}
       />
+
+      <Card className="mb-12 shadow-xl overflow-hidden">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3 text-2xl">
+            <DraftingCompass className="w-8 h-8 text-primary" />
+            Visualizador Interactivo de Kart (Próximamente)
+          </CardTitle>
+          <CardDescription>
+            Visualiza cómo lucen las piezas en un modelo 3D de kart y entiende su función. Selecciona componentes del catálogo para verlos en acción.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="aspect-[16/7] bg-muted rounded-lg flex items-center justify-center relative">
+            <Image 
+              src="https://placehold.co/1200x400.png" 
+              alt="Visualizador 3D de Kart Placeholder" 
+              layout="fill" 
+              objectFit="cover" 
+              className="rounded-lg"
+              data-ai-hint="3d kart diagram"
+            />
+            <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center rounded-lg">
+              <h3 className="text-2xl font-semibold text-background mb-2">Interacción 3D Próximamente</h3>
+              <p className="text-background/80 text-center max-w-md">
+                Estamos desarrollando una herramienta revolucionaria para que explores y configures karts en 3D.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <section className="mb-12">
         <div className="flex items-center gap-3 mb-4">
@@ -259,7 +290,7 @@ export default function PartsCatalogPage() {
       <section>
         <div className="flex items-center gap-3 mb-4">
           <Users className="w-8 h-8 text-primary" />
-          <h2 className="text-2xl font-semibold text-foreground">Directorio de Proveedores</h2>
+          <h2 className="text-2xl font-semibold text-foreground">Directorio de Proveedores Verificados</h2>
         </div>
          <Card className="mb-8 shadow-md">
           <CardContent className="p-6 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 items-end">

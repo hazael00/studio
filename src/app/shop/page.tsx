@@ -1,8 +1,9 @@
+
 import { PageHeader } from '@/components/ui/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { ShoppingCart, Tag, Star } from 'lucide-react';
+import { Shirt, Tag, Star, ShoppingBag } from 'lucide-react'; // Changed ShoppingCart to Shirt and added ShoppingBag
 
 const products = [
   {
@@ -65,9 +66,9 @@ export default function ShopPage() {
   return (
     <div>
       <PageHeader
-        title="S4NT1 Shop"
+        title="S4NT1 Merch Oficial"
         description="¡Consigue la mercancía oficial de S4NT1! Desde ropa hasta coleccionables digitales, ¡todo con la vibra de un campeón!"
-        icon={ShoppingCart}
+        icon={ShoppingBag} // Changed to ShoppingBag for merch store
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -95,7 +96,7 @@ export default function ShopPage() {
             </CardContent>
             <CardFooter>
               <Button className="w-full bg-primary hover:bg-primary/90">
-                <ShoppingCart className="mr-2 h-4 w-4" /> Ver Detalles
+                <ShoppingBag className="mr-2 h-4 w-4" /> Ver Detalles
               </Button>
             </CardFooter>
           </Card>
@@ -104,3 +105,4 @@ export default function ShopPage() {
     </div>
   );
 }
+

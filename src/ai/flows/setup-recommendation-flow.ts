@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A kart setup recommendation AI agent.
@@ -10,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const SetupRecommendationInputSchema = z.object({
+const SetupRecommendationInputSchema = z.object({
   trackName: z
     .string()
     .describe(
@@ -45,7 +46,7 @@ export type SetupRecommendationInput = z.infer<
   typeof SetupRecommendationInputSchema
 >;
 
-export const SetupRecommendationOutputSchema = z.object({
+const SetupRecommendationOutputSchema = z.object({
   recommendationTitle: z
     .string()
     .describe(
@@ -205,3 +206,4 @@ const setupRecommendationFlow = ai.defineFlow(
     };
   }
 );
+

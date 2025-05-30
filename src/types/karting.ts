@@ -21,4 +21,10 @@ export interface Track {
   layoutImageUrl?: string; 
   layoutImageHint?: string; 
   features?: string[]; 
+
+  webcamUrl?: string;
+  galleryImageUrls?: string[];
+  galleryImageHints?: string[];
+  videoUrls?: string[]; // e.g., YouTube links
+  lapRecords?: { category: string; time: string; driver: string; date?: string; }[];
 }

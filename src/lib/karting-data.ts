@@ -19,7 +19,19 @@ export const initialTracksData: Track[] = [
     advancedPdfPrice: 1.99,
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "track layout simple",
-    features: ["Homologada FIA", "Karts de Renta", "Tienda de Partes", "Escuela de Pilotos"]
+    features: ["Homologada FIA", "Karts de Renta", "Tienda de Partes", "Escuela de Pilotos", "Restaurante"],
+    webcamUrl: "https://www.example.com/kbr-webcam", // Example
+    galleryImageUrls: [
+      "https://placehold.co/400x300.png",
+      "https://placehold.co/400x300.png",
+      "https://placehold.co/400x300.png"
+    ],
+    galleryImageHints: ["track corner action", "paddock area", "kart race start"],
+    videoUrls: ["https://www.youtube.com/watch?v=exampleKBR"],
+    lapRecords: [
+      { category: "Mini Max", time: "58.320s", driver: "S. Diaz", date: "2023-10-15" },
+      { category: "Senior Max", time: "55.110s", driver: "J. Perez", date: "2023-11-01" }
+    ]
   },
   {
     id: "sgk-ita",
@@ -36,7 +48,17 @@ export const initialTracksData: Track[] = [
     basicSetupGuidePdfUrl: "/pdf/sgk-basic-setup.pdf",
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "track layout complex",
-    features: ["Homologada FIA", "Restaurante", "Tienda de Partes", "Eventos Internacionales"]
+    features: ["Homologada FIA", "Restaurante de Lujo", "Tienda de Partes Pro", "Eventos Internacionales", "Museo del Karting"],
+    galleryImageUrls: [
+      "https://placehold.co/400x300.png",
+      "https://placehold.co/400x300.png",
+    ],
+    galleryImageHints: ["italian karting track", "world championship event"],
+    videoUrls: ["https://www.youtube.com/watch?v=exampleSGK1", "https://www.youtube.com/watch?v=exampleSGK2"],
+    lapRecords: [
+      { category: "OKJ", time: "47.890s", driver: "A. Antonelli", date: "2022-07-20" },
+      { category: "KZ2", time: "45.995s", driver: "P. Hiltbrand", date: "2023-03-10" }
+    ]
   },
   {
     id: "skusa-usa",
@@ -50,7 +72,8 @@ export const initialTracksData: Track[] = [
     imageHint: "las vegas karting race",
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "temporary track layout",
-    features: ["Evento Especial Anual", "Ubicación Urbana"],
+    features: ["Evento Especial Anual", "Ubicación Urbana Única", "Competición de Estrellas"],
+    // No PDFs for temporary track generally
   },
   {
     id: "genk-bel",
@@ -68,7 +91,8 @@ export const initialTracksData: Track[] = [
     advancedPdfPrice: 2.49,
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "professional track layout",
-    features: ["Homologada FIA", "Iluminación Nocturna", "Karts de Renta", "Brasserie"]
+    features: ["Homologada FIA", "Iluminación Nocturna", "Karts de Renta", "Brasserie", "Escuela de Pilotos de Alto Nivel"],
+    webcamUrl: "https://www.example.com/genk-webcam",
   },
    {
     id: "adria-ita",
@@ -84,7 +108,10 @@ export const initialTracksData: Track[] = [
     technicalSheetPdfUrl: "/pdf/adria-technical-sheet.pdf",
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "modern track layout",
-    features: ["Homologada FIA", "Restaurante", "Paddock Cubierto"],
+    features: ["Homologada FIA", "Restaurante Panorámico", "Paddock Cubierto Extenso", "Hotel en el Circuito"],
+    lapRecords: [
+      { category: "OK", time: "48.050s", driver: "L. Travisanutto", date: "2021-05-15" }
+    ]
   },
   {
     id: "pf-int-uk",
@@ -100,7 +127,7 @@ export const initialTracksData: Track[] = [
     basicSetupGuidePdfUrl: "/pdf/pfi-basic-setup.pdf",
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "uk track layout",
-    features: ["Homologada FIA", "Karts de Renta", "Tienda de Partes", "Puente Icónico"],
+    features: ["Homologada FIA", "Karts de Renta (Club)", "Tienda de Partes", "Puente Icónico", "Amplias Zonas Verdes"],
   },
   {
     id: "valencia-esp",
@@ -113,7 +140,7 @@ export const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/600x400.png",
     imageHint: "karting valencia spain",
     website: "https://www.kartodromolucasguerrero.com/",
-    features: ["Homologada FIA", "Karts de Renta", "Restaurante", "Iluminación Nocturna", "Múltiples Trazados"],
+    features: ["Homologada FIA", "Karts de Renta (Varias categorías)", "Restaurante con Terraza", "Iluminación Nocturna Total", "Múltiples Trazados Configurables", "Escuela de Karting"],
     advancedSetupGuidePdfUrl: "/pdf/valencia-advanced-setup.pdf",
     advancedPdfPrice: 0.99,
   }

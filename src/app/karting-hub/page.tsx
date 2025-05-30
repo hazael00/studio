@@ -6,9 +6,11 @@ import { PageHeader } from '@/components/ui/page-header';
 import { MapComponent } from '@/components/karting-hub/map-component';
 import { TrackCard } from '@/components/karting-hub/track-card';
 import type { Track } from '@/types/karting';
-import { MapPinned, Search } from 'lucide-react';
+import { MapPinned, Search, Download, FileText, DollarSign, CheckCircle, XCircle, ShoppingCart } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 const initialTracksData: Track[] = [
   {
@@ -22,8 +24,10 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "karting track mexico",
     website: "https://www.kartodromokbr.com",
-    setupGuidePdfUrl: "/pdf/kbr-setup-guide.pdf", // Updated
-    strategyGuidePdfUrl: "#",
+    technicalSheetPdfUrl: "/pdf/kbr-technical-sheet.pdf",
+    basicSetupGuidePdfUrl: "/pdf/kbr-basic-setup.pdf",
+    advancedSetupGuidePdfUrl: "/pdf/kbr-advanced-setup.pdf",
+    advancedPdfPrice: 1.99,
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "track layout simple",
     features: ["Homologada FIA", "Karts de Renta", "Tienda de Partes"]
@@ -39,8 +43,9 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "south garda karting aerial",
     website: "https://www.southgardakarting.it",
-    setupGuidePdfUrl: "/pdf/sgk-setup-guide.pdf", // Updated
-    strategyGuidePdfUrl: "/pdf/sgk-strategy-guide.pdf", // Added
+    technicalSheetPdfUrl: "/pdf/sgk-technical-sheet.pdf",
+    basicSetupGuidePdfUrl: "/pdf/sgk-basic-setup.pdf", // Previously setupGuidePdfUrl
+    strategyGuidePdfUrl: "/pdf/sgk-strategy-guide.pdf", // Could be another basic or advanced one
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "track layout complex",
     features: ["Homologada FIA", "Restaurante", "Tienda de Partes"]
@@ -50,16 +55,14 @@ const initialTracksData: Track[] = [
     name: "SKUSA SuperNationals Track (LVCC)",
     location: "Las Vegas, USA",
     countryCode: "US",
-    length: "1.3 km", // Varies year to year
-    corners: 14, // Varies
+    length: "1.3 km", 
+    corners: 14, 
     description: "Pista temporal para el prestigioso evento SuperNationals. Rápida, exigente y con muros cercanos.",
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "las vegas karting race",
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "temporary track layout",
     features: ["Evento Especial"],
-    setupGuidePdfUrl: "#",
-    strategyGuidePdfUrl: "#",
   },
   {
     id: "genk-bel",
@@ -72,8 +75,9 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "karting genk track",
     website: "https://www.kartinggenk.be",
-    setupGuidePdfUrl: "#", 
-    strategyGuidePdfUrl: "/pdf/genk-strategy-guide.pdf", // Updated
+    basicSetupGuidePdfUrl: "/pdf/genk-basic-setup.pdf",
+    advancedSetupGuidePdfUrl: "/pdf/genk-advanced-setup.pdf",
+    advancedPdfPrice: 2.49,
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "professional track layout",
     features: ["Homologada FIA", "Iluminación Nocturna", "Karts de Renta"]
@@ -89,11 +93,10 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "adria karting raceway",
     website: "https://www.adriaraceway.com",
-    setupGuidePdfUrl: "/pdf/adria-setup-guide.pdf", // Updated
+    technicalSheetPdfUrl: "/pdf/adria-technical-sheet.pdf",
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "modern track layout",
     features: ["Homologada FIA", "Restaurante"],
-    strategyGuidePdfUrl: "#",
   },
   {
     id: "pf-int-uk",
@@ -106,11 +109,10 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "pf international karting",
     website: "https://tvkc.co.uk",
-    strategyGuidePdfUrl: "/pdf/pfi-strategy-guide.pdf", // Updated
+    basicSetupGuidePdfUrl: "/pdf/pfi-basic-setup.pdf",
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "uk track layout",
     features: ["Homologada FIA", "Karts de Renta", "Tienda de Partes"],
-    setupGuidePdfUrl: "#",
   },
   {
     id: "valencia-esp",
@@ -124,8 +126,8 @@ const initialTracksData: Track[] = [
     imageHint: "karting valencia spain",
     website: "https://www.kartodromolucasguerrero.com/",
     features: ["Homologada FIA", "Karts de Renta", "Restaurante", "Iluminación Nocturna"],
-    setupGuidePdfUrl: "#",
-    strategyGuidePdfUrl: "#",
+    advancedSetupGuidePdfUrl: "/pdf/valencia-advanced-setup.pdf",
+    advancedPdfPrice: 0.99,
   }
 ];
 
@@ -154,6 +156,8 @@ export default function KartingHubPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [selectedFeature, setSelectedFeature] = useState('all');
+  const [selectedTrackForModal, setSelectedTrackForModal] = useState<Track | null>(null);
+  const [isResourcesModalOpen, setIsResourcesModalOpen] = useState(false);
 
   const filteredTracks = useMemo(() => {
     return initialTracksData.filter(track => {
@@ -169,11 +173,16 @@ export default function KartingHubPage() {
     });
   }, [searchTerm, selectedCountry, selectedFeature]);
 
+  const openResourcesModal = (track: Track) => {
+    setSelectedTrackForModal(track);
+    setIsResourcesModalOpen(true);
+  };
+
   return (
     <div>
       <PageHeader
         title="Karting Hub Global"
-        description="Explora pistas de karting de todo el mundo. Encuentra detalles, configuraciones y más."
+        description="Explora pistas de karting de todo el mundo. Encuentra detalles, recursos y más."
         icon={MapPinned}
       />
 
@@ -230,11 +239,74 @@ export default function KartingHubPage() {
       {filteredTracks.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTracks.map(track => (
-            <TrackCard key={track.id} track={track} />
+            <TrackCard key={track.id} track={track} onOpenResourcesModal={openResourcesModal} />
           ))}
         </div>
       ) : (
         <p className="text-center text-muted-foreground py-10">No se encontraron pistas con los filtros seleccionados.</p>
+      )}
+
+      {selectedTrackForModal && (
+        <Dialog open={isResourcesModalOpen} onOpenChange={setIsResourcesModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Recursos para: {selectedTrackForModal.name}</DialogTitle>
+              <DialogDescription>
+                Descarga guías y fichas técnicas disponibles para esta pista.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              {selectedTrackForModal.technicalSheetPdfUrl && (
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-md">
+                  <div>
+                    <FileText className="inline-block mr-2 h-5 w-5 text-primary" />
+                    <span>Ficha Técnica</span>
+                  </div>
+                  <Button size="sm" asChild>
+                    <a href={selectedTrackForModal.technicalSheetPdfUrl} target="_blank" rel="noopener noreferrer">
+                      <Download className="mr-2 h-4 w-4" /> Descargar (Gratis)
+                    </a>
+                  </Button>
+                </div>
+              )}
+              {selectedTrackForModal.basicSetupGuidePdfUrl && (
+                 <div className="flex justify-between items-center p-3 bg-muted/50 rounded-md">
+                   <div>
+                     <FileText className="inline-block mr-2 h-5 w-5 text-primary" />
+                     <span>Guía de Setup Básica</span>
+                   </div>
+                  <Button size="sm" asChild>
+                    <a href={selectedTrackForModal.basicSetupGuidePdfUrl} target="_blank" rel="noopener noreferrer">
+                      <Download className="mr-2 h-4 w-4" /> Descargar (Gratis)
+                    </a>
+                  </Button>
+                </div>
+              )}
+              {selectedTrackForModal.advancedSetupGuidePdfUrl && (
+                <div className="flex justify-between items-center p-3 bg-accent/10 rounded-md border border-accent">
+                   <div>
+                     <FileText className="inline-block mr-2 h-5 w-5 text-accent" />
+                     <span>Guía de Setup Avanzada</span>
+                     {selectedTrackForModal.advancedPdfPrice && (
+                       <span className="ml-2 text-sm font-semibold text-accent">
+                         (${selectedTrackForModal.advancedPdfPrice.toFixed(2)} USD)
+                       </span>
+                     )}
+                   </div>
+                  <Button size="sm" variant="default" className="bg-accent hover:bg-accent/90" disabled> {/* Placeholder: payment logic needed */}
+                    <ShoppingCart className="mr-2 h-4 w-4" /> Comprar Guía
+                  </Button>
+                </div>
+              )}
+              {!(selectedTrackForModal.technicalSheetPdfUrl || selectedTrackForModal.basicSetupGuidePdfUrl || selectedTrackForModal.advancedSetupGuidePdfUrl) && (
+                <p className="text-sm text-muted-foreground text-center">No hay recursos PDF adicionales para esta pista por el momento.</p>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsResourcesModalOpen(false)}>Cerrar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

@@ -5,9 +5,11 @@ export interface Part {
   description: string;
   category: 'Engine' | 'Chassis' | 'Tires' | 'Brakes' | 'Transmission' | 'Electronics' | 'Bodywork' | 'Other';
   brand: string;
+  partNumber?: string; // Added
   priceRange?: string; // e.g., "$100 - $150" or "Consult"
   imageUrl: string;
   imageHint: string; // For Unsplash search, e.g., "kart engine"
+  status: 'Available' | 'Discontinued' | 'Pre-Order'; // Added
   compatibilityInfo?: string; // Textual description of compatibility
   technicalSpecs?: Record<string, string>; // e.g., { "Weight": "5kg", "Material": "Aluminum" }
   supplierIds?: string[]; // IDs of suppliers who offer this part
@@ -30,6 +32,8 @@ export interface Supplier {
   logoImageHint?: string;
   offersOnlineSales?: boolean;
   shippingInfo?: string; // Notes on shipping capabilities/regions
+  rating?: number; // Added (1-5)
+  servicesOffered?: string[]; // Added (e.g., "Engine Tuning", "Chassis Repair")
 }
 
 export interface SetupRecommendation {

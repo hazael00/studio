@@ -5,10 +5,10 @@ import { useState, useMemo } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wrench, Search, Package, Users, Globe } from 'lucide-react';
 import type { Part, Supplier } from '@/types/parts';
 import { PartCard } from '@/components/parts-catalog/part-card';
-// import { SupplierCard } from '@/components/parts-catalog/supplier-card'; // No longer used here
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
@@ -208,12 +208,12 @@ export default function PartsCatalogPage() {
       />
 
       <section className="mb-12">
-        <div className="flex items-center gap-2 mb-6">
-          <Package className="w-7 h-7 text-primary" />
+        <div className="flex items-center gap-3 mb-4">
+          <Package className="w-8 h-8 text-primary" />
           <h2 className="text-2xl font-semibold text-foreground">Catálogo de Piezas</h2>
         </div>
-        <div className="mb-6 p-4 bg-card rounded-lg shadow">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+        <Card className="mb-8 shadow-md">
+          <CardContent className="p-6 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 items-end">
             <div>
               <label htmlFor="searchParts" className="block text-sm font-medium text-muted-foreground mb-1">Buscar Pieza</label>
               <div className="relative">
@@ -240,24 +240,29 @@ export default function PartsCatalogPage() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
         {filteredParts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredParts.map(part => <PartCard key={part.id} part={part} />)}
           </div>
         ) : (
-          <p className="text-center text-muted-foreground py-10">No se encontraron piezas con los filtros seleccionados.</p>
+          <Card className="text-center text-muted-foreground py-10 shadow-sm">
+            <CardContent>
+                <Package className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                <p>No se encontraron piezas con los filtros seleccionados.</p>
+            </CardContent>
+          </Card>
         )}
       </section>
 
       <section>
-        <div className="flex items-center gap-2 mb-6">
-          <Users className="w-7 h-7 text-primary" />
+        <div className="flex items-center gap-3 mb-4">
+          <Users className="w-8 h-8 text-primary" />
           <h2 className="text-2xl font-semibold text-foreground">Directorio de Proveedores</h2>
         </div>
-         <div className="mb-6 p-4 bg-card rounded-lg shadow">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+         <Card className="mb-8 shadow-md">
+          <CardContent className="p-6 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 items-end">
             <div>
               <label htmlFor="searchSuppliers" className="block text-sm font-medium text-muted-foreground mb-1">Buscar Proveedor</label>
               <div className="relative">
@@ -284,16 +289,16 @@ export default function PartsCatalogPage() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
         {filteredSuppliers.length > 0 ? (
-          <div className="overflow-x-auto bg-card rounded-lg shadow">
+          <Card className="overflow-hidden shadow-lg">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nombre</TableHead>
+                  <TableHead className="w-[200px]">Nombre</TableHead>
                   <TableHead>Región</TableHead>
-                  <TableHead>País</TableHead>
+                  <TableHead>País / Ciudad</TableHead>
                   <TableHead>Especialidades</TableHead>
                   <TableHead>Servicios</TableHead>
                   <TableHead className="text-center">Rating</TableHead>
@@ -319,8 +324,8 @@ export default function PartsCatalogPage() {
                     <TableCell className="text-center">{supplier.rating ? supplier.rating.toFixed(1) + ' ⭐' : 'N/A'}</TableCell>
                     <TableCell className="text-right">
                       {supplier.website ? (
-                        <Button variant="link" size="sm" asChild>
-                          <Link href={supplier.website} target="_blank" rel="noopener noreferrer">
+                        <Button variant="link" size="sm" asChild className="p-0 h-auto">
+                          <Link href={supplier.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
                             <Globe className="mr-1 h-4 w-4" /> Visitar
                           </Link>
                         </Button>
@@ -332,9 +337,14 @@ export default function PartsCatalogPage() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </Card>
         ) : (
-          <p className="text-center text-muted-foreground py-10">No se encontraron proveedores con los filtros seleccionados.</p>
+          <Card className="text-center text-muted-foreground py-10 shadow-sm">
+            <CardContent>
+                <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                <p>No se encontraron proveedores con los filtros seleccionados.</p>
+            </CardContent>
+          </Card>
         )}
       </section>
     </div>

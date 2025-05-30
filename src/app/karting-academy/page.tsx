@@ -7,61 +7,61 @@ import { GraduationCap, Wrench, BarChart3, Settings } from 'lucide-react';
 const academyTopics = [
   {
     id: "carburetor",
-    title: "Ajuste de Carburador: El Corazón del Motor",
+    title: "Ajuste de Carburador con S4NT1: El Corazón del Motor",
     icon: Settings,
     imageHint: "kart engine",
     content: [
       {
-        subTitle: "¿Qué es un carburador?",
-        text: "El carburador es un dispositivo que mezcla aire y combustible en las proporciones adecuadas para la combustión en un motor. En karting, su correcto ajuste es crucial para el rendimiento."
+        subTitle: "¿Qué es un carburador? S4NT1 te explica",
+        text: "El carburador es un dispositivo que mezcla aire y combustible en las proporciones adecuadas para la combustión en un motor. En karting, su correcto ajuste es crucial para el rendimiento, y S4NT1 te enseñará cómo dominarlo."
       },
       {
-        subTitle: "Ajustes básicos",
-        text: "Los principales ajustes son las agujas de alta y baja, que regulan el flujo de combustible a diferentes regímenes del motor. Un ajuste fino depende de la altitud, temperatura y humedad."
+        subTitle: "Ajustes básicos según S4NT1",
+        text: "Los principales ajustes son las agujas de alta y baja, que regulan el flujo de combustible a diferentes regímenes del motor. Un ajuste fino depende de la altitud, temperatura y humedad. S4NT1 comparte sus trucos."
       },
       {
-        subTitle: "Síntomas de mal ajuste",
-        text: "Un motor que 'ratea', se ahoga, o no entrega potencia puede tener un carburador mal ajustado. Escuchar el motor y leer la bujía son claves para el diagnóstico."
+        subTitle: "Síntomas de mal ajuste (Tips de S4NT1)",
+        text: "Un motor que 'ratea', se ahoga, o no entrega potencia puede tener un carburador mal ajustado. Escuchar el motor y leer la bujía son claves para el diagnóstico, ¡S4NT1 te muestra cómo!"
       }
     ]
   },
   {
     id: "telemetry",
-    title: "Telemetría: Los Datos que Hablan",
+    title: "Telemetría con S4NT1: Los Datos que Hablan",
     icon: BarChart3,
     imageHint: "telemetry data",
     content: [
       {
-        subTitle: "Introducción a la telemetría",
-        text: "La telemetría en karting implica recolectar datos del kart y del piloto durante la conducción. Sensores miden RPM, velocidad, tiempos por vuelta, fuerzas G, temperatura, etc."
+        subTitle: "Introducción a la telemetría por S4NT1",
+        text: "La telemetría en karting implica recolectar datos del kart y del piloto durante la conducción. Sensores miden RPM, velocidad, tiempos por vuelta, fuerzas G, temperatura, etc. S4NT1 te ayuda a entender estos datos."
       },
       {
-        subTitle: "Análisis de datos",
-        text: "Analizar estos datos permite entender el comportamiento del kart, optimizar trazadas, puntos de frenada, y mejorar la configuración del chasis y motor."
+        subTitle: "Análisis de datos como S4NT1",
+        text: "Analizar estos datos permite entender el comportamiento del kart, optimizar trazadas, puntos de frenada, y mejorar la configuración del chasis y motor. ¡Descubre los secretos del análisis con S4NT1!"
       },
       {
-        subTitle: "Herramientas comunes",
-        text: "Sistemas como MyChron o Alfano son populares. Permiten descargar los datos a un software para un análisis detallado."
+        subTitle: "Herramientas comunes (Recomendadas por S4NT1)",
+        text: "Sistemas como MyChron o Alfano son populares. Permiten descargar los datos a un software para un análisis detallado. S4NT1 te cuenta cuáles usa."
       }
     ]
   },
   {
     id: "chassis",
-    title: "Configuración de Chasis: Equilibrio y Agarre",
+    title: "Configuración de Chasis por S4NT1: Equilibrio y Agarre",
     icon: Wrench,
     imageHint: "kart chassis",
     content: [
       {
-        subTitle: "Importancia del chasis",
-        text: "El chasis es el esqueleto del kart. Su flexibilidad y configuración afectan directamente el agarre y la maniobrabilidad."
+        subTitle: "La importancia del chasis, visión de S4NT1",
+        text: "El chasis es el esqueleto del kart. Su flexibilidad y configuración afectan directamente el agarre y la maniobrabilidad. S4NT1 te explica por qué es tan vital."
       },
       {
-        subTitle: "Ajustes clave",
-        text: "Convergencia/divergencia, caster, camber, ancho de vías (delantero y trasero), y altura son algunos de los parámetros ajustables para adaptar el kart a la pista y estilo de pilotaje."
+        subTitle: "Ajustes clave según S4NT1",
+        text: "Convergencia/divergencia, caster, camber, ancho de vías (delantero y trasero), y altura son algunos de los parámetros ajustables para adaptar el kart a la pista y estilo de pilotaje. Aprende a ajustarlos con S4NT1."
       },
       {
-        subTitle: "Impacto en el pilotaje",
-        text: "Un chasis bien configurado permite al piloto ser más rápido y consistente. Entender cómo cada ajuste afecta el comportamiento es fundamental."
+        subTitle: "Impacto en el pilotaje (Experiencia S4NT1)",
+        text: "Un chasis bien configurado permite al piloto ser más rápido y consistente. Entender cómo cada ajuste afecta el comportamiento es fundamental. S4NT1 comparte su experiencia."
       }
     ]
   }
@@ -71,8 +71,8 @@ export default function KartingAcademyPage() {
   return (
     <div>
       <PageHeader
-        title="Karting Academy S4NT1"
-        description="¡Domina los secretos del karting! Aprende desde lo básico hasta técnicas avanzadas con explicaciones claras."
+        title="Karting Academy con S4NT1"
+        description="¡Domina los secretos del karting con tu guía S4NT1! Aprende desde lo básico hasta técnicas avanzadas con explicaciones claras y directas de un piloto."
         icon={GraduationCap}
       />
 

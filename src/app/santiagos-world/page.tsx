@@ -5,25 +5,25 @@ import { Trophy, Zap, MapPin, Dumbbell, Utensils, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const santiagoData = {
-  bio: "Santiago Díaz de la Vega es un joven y talentoso piloto mexicano de 13 años, actualmente compitiendo en Forza Racing UK. Con una pasión ardiente por la velocidad y una determinación de acero, Santiago busca dejar su huella en el mundo del karting profesional.",
+  bio: "Santiago Díaz de la Vega, conocido en el mundo digital como S4NT1, es un joven y talentoso piloto mexicano de 13 años, actualmente compitiendo en Forza Racing UK. Con una pasión ardiente por la velocidad y una determinación de acero, Santiago (S4NT1) busca dejar su huella en el mundo del karting profesional y compartir su conocimiento a través de esta plataforma.",
   achievements: [
     { id: 1, title: "Campeón Nacional Mini Max 2022", description: "Demostrando su habilidad desde temprana edad.", icon: Trophy, imageHint: "karting trophy" },
     { id: 2, title: "Podio en SKUSA SuperNationals", description: "Compitiendo contra los mejores del mundo.", icon: Star, imageHint: "karting podium" },
     { id: 3, title: "Forza Racing UK - Piloto Promesa", description: "Actualmente destacando en el competitivo serial británico.", icon: Zap, imageHint: "uk flag racing" },
   ],
   favoriteTracks: [
-    { id: 1, name: "Autódromo de Interlagos (Kartódromo)", description: "Un circuito técnico y desafiante en Brasil.", icon: MapPin, imageHint: "interlagos track" },
-    { id: 2, name: "South Garda Karting", description: "Pista icónica en Italia, cuna de campeones.", icon: MapPin, imageHint: "south garda karting" },
+    { id: 1, name: "Autódromo de Interlagos (Kartódromo)", description: "Un circuito técnico y desafiante en Brasil, una de las pistas preferidas de S4NT1.", icon: MapPin, imageHint: "interlagos track" },
+    { id: 2, name: "South Garda Karting", description: "Pista icónica en Italia, cuna de campeones y un lugar donde S4NT1 ha pulido su técnica.", icon: MapPin, imageHint: "south garda karting" },
   ],
   training: {
-    title: "Rutina de Campeón",
-    description: "Santiago combina entrenamiento físico intenso, simulador y mucha práctica en pista para mantenerse al máximo nivel.",
+    title: "Rutina de Campeón de S4NT1",
+    description: "Santiago (S4NT1) combina entrenamiento físico intenso, simulador y mucha práctica en pista para mantenerse al máximo nivel.",
     icon: Dumbbell,
     imageHint: "gym training"
   },
   nutrition: {
-    title: "Combustible para Ganar",
-    description: "Una dieta balanceada y específica para atletas de alto rendimiento es clave en su preparación.",
+    title: "Combustible para Ganar (Dieta S4NT1)",
+    description: "Una dieta balanceada y específica para atletas de alto rendimiento es clave en la preparación de S4NT1.",
     icon: Utensils,
     imageHint: "healthy food athlete"
   }
@@ -33,21 +33,21 @@ export default function SantiagosWorldPage() {
   return (
     <div>
       <PageHeader
-        title="El Mundo de Santiago Díaz de la Vega"
-        description="Conoce más sobre la trayectoria, logros y pasiones de S4NT1, tu piloto favorito."
+        title="El Mundo de Santiago Díaz de la Vega (S4NT1)"
+        description="Conoce más sobre la trayectoria, logros y pasiones de Santiago, el piloto detrás del avatar S4NT1 que te guía en esta plataforma."
         icon={Trophy}
       />
 
       <Card className="mb-8 shadow-xl">
         <CardHeader>
-          <CardTitle className="text-2xl">Biografía</CardTitle>
+          <CardTitle className="text-2xl">Biografía de S4NT1</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-lg leading-relaxed">{santiagoData.bio}</p>
         </CardContent>
       </Card>
 
-      <h2 className="text-2xl font-semibold mb-6 mt-10 text-center">Logros Destacados 🏆</h2>
+      <h2 className="text-2xl font-semibold mb-6 mt-10 text-center">Logros Destacados de S4NT1 🏆</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {santiagoData.achievements.map(ach => (
           <Card key={ach.id} className="hover:shadow-xl transition-shadow duration-300">
@@ -84,7 +84,7 @@ export default function SantiagosWorldPage() {
         </Card>
       </div>
       
-      <h2 className="text-2xl font-semibold mb-6 mt-10 text-center">Pistas Favoritas 🗺️</h2>
+      <h2 className="text-2xl font-semibold mb-6 mt-10 text-center">Pistas Favoritas de S4NT1 🗺️</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {santiagoData.favoriteTracks.map(track => (
           <Card key={track.id} className="hover:shadow-xl transition-shadow duration-300">

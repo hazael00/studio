@@ -10,7 +10,7 @@ export default function HomePage() {
     <div className="container mx-auto">
       <PageHeader
         title="¡Bienvenido al Mundo de S4NT1!"
-        description="Soy S4NT1, tu avatar digital y guía en el universo del karting. ¡Prepárate para la adrenalina!"
+        description="Soy S4NT1, tu avatar digital y guía experto en el universo del karting. ¡Prepárate para la adrenalina y domina cada curva conmigo!"
         icon={Rocket}
       />
 
@@ -26,7 +26,7 @@ export default function HomePage() {
           />
           <CardHeader className="text-center p-0">
             <CardTitle className="text-3xl font-bold text-primary">S4NT1</CardTitle>
-            <CardDescription className="text-md text-accent">Tu Guía en el Karting</CardDescription>
+            <CardDescription className="text-md text-accent">Tu Guía Experto en Karting</CardDescription>
           </CardHeader>
         </Card>
         <Card className="md:col-span-2 flex flex-col justify-center shadow-lg">
@@ -38,7 +38,7 @@ export default function HomePage() {
               ¡Qué onda! Soy S4NT1, el avatar digital de Santiago Díaz de la Vega, un piloto mexicano de 13 años que la está rompiendo en Forza Racing UK. 🏁
             </p>
             <p className="text-lg leading-relaxed">
-              Mi lema es: <strong className="text-primary">“Yo no nací para frenar, nací para ganar.”</strong> Y estoy aquí para llevarte al límite de la emoción, enseñarte todo sobre karting y conectar contigo, sin importar de dónde seas o cuánto sepas de carreras. ¡Prepárate para una experiencia épica!
+              Mi lema es: <strong className="text-primary">“Yo no nací para frenar, nací para ganar.”</strong> Y estoy aquí para llevarte al límite de la emoción, enseñarte todos los secretos del karting desde mi experiencia en pista, ayudarte a encontrar las mejores piezas y configuraciones, y conectar contigo, sin importar de dónde seas o cuánto sepas de carreras. ¡Prepárate para una experiencia épica!
             </p>
             <div className="flex justify-end">
               <Link href="/santiagos-world" passHref legacyBehavior>
@@ -59,11 +59,11 @@ export default function HomePage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
-          { title: "Social Media Wizard", description: "Genera contenido viral para tus redes.", icon: Sparkles, href: "/social-wizard", cta: "Crear Contenido" },
-          { title: "Language Maestro", description: "Chatea en múltiples idiomas, ¡sin barreras!", icon: Languages, href: "/language-maestro", cta: "Traducir Ahora" },
-          { title: "Karting Academy", description: "Aprende los secretos técnicos del karting.", icon: GraduationCap, href: "/karting-academy", cta: "Empezar a Aprender" },
-          { title: "Fan Zone", description: "Diviértete con trivias y retos.", icon: Gamepad2, href: "/fan-zone", cta: "Unirse a la Diversión" },
-          { title: "S4NT1 Shop", description: "Consigue mercancía exclusiva y coleccionables.", icon: ShoppingCart, href: "/shop", cta: "Ir a la Tienda" },
+          { title: "Social Media Wizard", description: "Genera contenido viral para tus redes, al estilo S4NT1.", icon: Sparkles, href: "/social-wizard", cta: "Crear Contenido con S4NT1" },
+          { title: "Language Maestro", description: "Comunícate sin barreras, S4NT1 te ayuda a traducir.", icon: Languages, href: "/language-maestro", cta: "Traducir con S4NT1" },
+          { title: "Karting Academy con S4NT1", description: "Aprende los secretos técnicos del karting con S4NT1.", icon: GraduationCap, href: "/karting-academy", cta: "Aprender de S4NT1" },
+          { title: "S4NT1 Fan Zone", description: "Diviértete con trivias y retos de S4NT1.", icon: Gamepad2, href: "/fan-zone", cta: "Unirse a la Diversión" },
+          { title: "S4NT1 Merch Oficial", description: "Consigue mercancía exclusiva y coleccionables de S4NT1.", icon: ShoppingCart, href: "/shop", cta: "Ir a la Tienda de S4NT1" },
         ].map(feature => (
           <Card key={feature.title} className="hover:shadow-xl transition-shadow duration-300">
             <CardHeader className="flex flex-row items-center gap-4">

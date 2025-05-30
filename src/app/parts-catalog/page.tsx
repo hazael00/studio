@@ -18,6 +18,7 @@ import type { Part, Supplier, Review } from '@/types/parts';
 import { PartCard } from '@/components/parts-catalog/part-card';
 
 const initialReviews: Review[] = [
+  { id: 'review-s4nt1-engine', user: 'S4NT1 (Piloto Experto)', rating: 5, comment: '¡Este motor Rotax es una bestia en la pista! Lo he probado en KBR y South Garda, y la respuesta es increíble. El EVO entrega la potencia justo donde la necesitas. Totalmente recomendado para competidores serios que buscan ese extra. ¡Épico!', date: '2024-07-20', avatarHint: 'karting driver avatar cool' },
   { id: 'review-001', user: 'PilotoPro77', rating: 5, comment: '¡Increíble rendimiento! Vale cada centavo.', date: '2024-05-15', avatarHint: 'helmet visor' },
   { id: 'review-002', user: 'KartMaster', rating: 4, comment: 'Muy buen motor, fácil de ajustar. El envío fue rápido.', date: '2024-05-10', avatarHint: 'race suit' },
   { id: 'review-003', user: 'SpeedyGonzales', rating: 5, comment: 'Calidad superior, se nota la diferencia en la pista. Lo recomiendo.', date: '2024-05-20', avatarHint: 'kart steering wheel' }
@@ -39,8 +40,8 @@ const initialPartsData: Part[] = [
     technicalSpecs: { Bore: '54mm', Stroke: '54.5mm', Power: '30hp @ 11,500 RPM', Cooling: 'Water-cooled' },
     supplierIds: ['supplier-001', 'supplier-003'],
     averageRating: 4.8,
-    reviews: initialReviews,
-    tags: ["High Performance", "Rotax Series", "EVO Technology"]
+    reviews: [initialReviews.find(r => r.id === 'review-s4nt1-engine')!, initialReviews[1], initialReviews[2]].filter(Boolean) as Review[],
+    tags: ["High Performance", "Rotax Series", "EVO Technology", "Probado por S4NT1"]
   },
   {
     id: 'chassis-001',
@@ -231,14 +232,15 @@ export default function PartsCatalogPage() {
   
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 !== 0; // Simple half star logic
+    const halfStar = rating % 1 !== 0; 
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
     
     return (
       <div className="flex items-center">
-        {[...Array(fullStars)].map((_, i) => <Star key={`full-${i}`} className="w-5 h-5 text-yellow-400 fill-yellow-400" />)}
-        {halfStar && <Star key="half" className="w-5 h-5 text-yellow-400" style={{ clipPath: 'inset(0 50% 0 0)' }} />} {/* Half-filled star */}
-        {[...Array(emptyStars)].map((_, i) => <Star key={`empty-${i}`} className="w-5 h-5 text-gray-300" />)}
+        {[...Array(fullStars)].map((_, i) => <Star key={`full-${i}`} className="w-4 h-4 text-yellow-400 fill-yellow-400" />)}
+        {/* Basic half-star: render a full star and clip it if needed, or use a specific half-star icon */}
+        {halfStar && <Star key="half" className="w-4 h-4 text-yellow-400 fill-yellow-400" style={{ clipPath: 'polygon(0 0, 50% 0, 50% 100%, 0% 100%)' }} />}
+        {[...Array(emptyStars)].map((_, i) => <Star key={`empty-${i}`} className="w-4 h-4 text-gray-300 fill-gray-300" />)}
       </div>
     );
   };
@@ -247,7 +249,7 @@ export default function PartsCatalogPage() {
     <div>
       <PageHeader
         title="Marketplace de Piezas y Karts S4NT1"
-        description="Explora un catálogo completo de piezas de karting, componentes, y encuentra proveedores verificados."
+        description="Explora un catálogo completo de piezas de karting, componentes, y encuentra proveedores verificados. S4NT1 te ayuda a elegir lo mejor."
         icon={ShoppingCart}
       />
 
@@ -258,7 +260,7 @@ export default function PartsCatalogPage() {
             Visualizador Interactivo de Kart (Próximamente)
           </CardTitle>
           <CardDescription>
-            Visualiza cómo lucen las piezas en un modelo 3D de kart y entiende su función. Selecciona componentes del catálogo para verlos en acción.
+            Visualiza cómo lucen las piezas en un modelo 3D de kart y entiende su función. Selecciona componentes del catálogo para verlos en acción, con el análisis de S4NT1.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -273,7 +275,7 @@ export default function PartsCatalogPage() {
             <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center rounded-lg p-4">
               <h3 className="text-2xl font-semibold text-background mb-2 text-center">Interacción 3D Próximamente</h3>
               <p className="text-background/80 text-center max-w-md">
-                Estamos desarrollando una herramienta revolucionaria para que explores y configures karts en 3D.
+                Estamos desarrollando una herramienta revolucionaria para que explores y configures karts en 3D, con la guía experta de S4NT1.
               </p>
             </div>
           </div>
@@ -283,7 +285,7 @@ export default function PartsCatalogPage() {
       <section className="mb-12">
         <div className="flex items-center gap-3 mb-4">
           <Package className="w-8 h-8 text-primary" />
-          <h2 className="text-2xl font-semibold text-foreground">Catálogo de Piezas</h2>
+          <h2 className="text-2xl font-semibold text-foreground">Catálogo de Piezas (Selección S4NT1)</h2>
         </div>
         <Card className="mb-8 shadow-md">
           <CardContent className="p-6 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 items-end">
@@ -332,7 +334,7 @@ export default function PartsCatalogPage() {
       <section>
         <div className="flex items-center gap-3 mb-4">
           <Users className="w-8 h-8 text-primary" />
-          <h2 className="text-2xl font-semibold text-foreground">Directorio de Proveedores Verificados</h2>
+          <h2 className="text-2xl font-semibold text-foreground">Directorio de Proveedores Verificados (Recomendados por S4NT1)</h2>
         </div>
          <Card className="mb-8 shadow-md">
           <CardContent className="p-6 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 items-end">
@@ -397,7 +399,8 @@ export default function PartsCatalogPage() {
                     <TableCell className="text-center">
                       {supplier.rating ? (
                         <div className="flex items-center justify-center gap-1">
-                          {supplier.rating.toFixed(1)} <Star className="w-4 h-4 text-yellow-400 fill-yellow-400"/>
+                          {renderStars(supplier.rating)}
+                          <span className="ml-1 text-xs">({supplier.rating.toFixed(1)})</span>
                         </div>
                       ) : <span className="text-xs text-muted-foreground">N/A</span>}
                     </TableCell>
@@ -455,7 +458,7 @@ export default function PartsCatalogPage() {
                   <div>
                     <h4 className="font-semibold mb-1 text-md">Etiquetas:</h4>
                     <div className="flex flex-wrap gap-2">
-                      {selectedPart.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                      {selectedPart.tags.map(tag => <Badge key={tag} variant={tag.includes("S4NT1") ? "default" : "secondary"}>{tag}</Badge>)}
                     </div>
                   </div>
                 )}
@@ -544,15 +547,15 @@ export default function PartsCatalogPage() {
               {selectedPart.reviews && selectedPart.reviews.length > 0 ? (
                 <div className="space-y-4">
                   {selectedPart.reviews.map(review => (
-                    <Card key={review.id} className="p-4">
+                    <Card key={review.id} className={`p-4 ${review.user.includes("S4NT1") ? 'bg-primary/10 border-primary' : ''}`}>
                       <div className="flex items-start gap-3">
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={`https://placehold.co/40x40.png`} alt={review.user} data-ai-hint={review.avatarHint || "person avatar"} />
+                           <AvatarImage src={`https://placehold.co/40x40.png`} alt={review.user} data-ai-hint={review.avatarHint || (review.user.includes("S4NT1") ? "karting driver avatar cool" : "person avatar")} />
                           <AvatarFallback>{review.user.substring(0,2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <p className="font-semibold text-sm">{review.user}</p>
+                            <p className={`font-semibold text-sm ${review.user.includes("S4NT1") ? 'text-primary' : ''}`}>{review.user}</p>
                             <span className="text-xs text-muted-foreground">{new Date(review.date).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center my-1">

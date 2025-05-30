@@ -6,11 +6,12 @@ import { PageHeader } from '@/components/ui/page-header';
 import { MapComponent } from '@/components/karting-hub/map-component';
 import { TrackCard } from '@/components/karting-hub/track-card';
 import type { Track } from '@/types/karting';
-import { MapPinned, Search, Download, FileText, DollarSign, CheckCircle, XCircle, ShoppingCart } from 'lucide-react';
+import { MapPinned, Search, Download, FileText, ShoppingCart } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 
 const initialTracksData: Track[] = [
   {
@@ -44,8 +45,8 @@ const initialTracksData: Track[] = [
     imageHint: "south garda karting aerial",
     website: "https://www.southgardakarting.it",
     technicalSheetPdfUrl: "/pdf/sgk-technical-sheet.pdf",
-    basicSetupGuidePdfUrl: "/pdf/sgk-basic-setup.pdf", // Previously setupGuidePdfUrl
-    strategyGuidePdfUrl: "/pdf/sgk-strategy-guide.pdf", // Could be another basic or advanced one
+    basicSetupGuidePdfUrl: "/pdf/sgk-basic-setup.pdf",
+    // No advanced setup for this one
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "track layout complex",
     features: ["Homologada FIA", "Restaurante", "Tienda de Partes"]
@@ -63,6 +64,7 @@ const initialTracksData: Track[] = [
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "temporary track layout",
     features: ["Evento Especial"],
+    // No PDFs for this one
   },
   {
     id: "genk-bel",
@@ -178,6 +180,28 @@ export default function KartingHubPage() {
     setIsResourcesModalOpen(true);
   };
 
+  const resourceItems = [
+    {
+      label: "Ficha Técnica",
+      url: selectedTrackForModal?.technicalSheetPdfUrl,
+      isFree: true,
+    },
+    {
+      label: "Guía de Setup Básica",
+      url: selectedTrackForModal?.basicSetupGuidePdfUrl,
+      isFree: true,
+    },
+    {
+      label: "Guía de Setup Avanzada",
+      url: selectedTrackForModal?.advancedSetupGuidePdfUrl,
+      isFree: false,
+      price: selectedTrackForModal?.advancedPdfPrice,
+    },
+  ];
+
+  const hasAnyResourceForModal = resourceItems.some(item => item.url && item.url !== "#");
+
+
   return (
     <div>
       <PageHeader
@@ -252,54 +276,44 @@ export default function KartingHubPage() {
             <DialogHeader>
               <DialogTitle>Recursos para: {selectedTrackForModal.name}</DialogTitle>
               <DialogDescription>
-                Descarga guías y fichas técnicas disponibles para esta pista.
+                Guías y fichas técnicas disponibles para esta pista.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              {selectedTrackForModal.technicalSheetPdfUrl && (
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-md">
-                  <div>
-                    <FileText className="inline-block mr-2 h-5 w-5 text-primary" />
-                    <span>Ficha Técnica</span>
-                  </div>
-                  <Button size="sm" asChild>
-                    <a href={selectedTrackForModal.technicalSheetPdfUrl} target="_blank" rel="noopener noreferrer">
-                      <Download className="mr-2 h-4 w-4" /> Descargar (Gratis)
-                    </a>
-                  </Button>
-                </div>
-              )}
-              {selectedTrackForModal.basicSetupGuidePdfUrl && (
-                 <div className="flex justify-between items-center p-3 bg-muted/50 rounded-md">
-                   <div>
-                     <FileText className="inline-block mr-2 h-5 w-5 text-primary" />
-                     <span>Guía de Setup Básica</span>
-                   </div>
-                  <Button size="sm" asChild>
-                    <a href={selectedTrackForModal.basicSetupGuidePdfUrl} target="_blank" rel="noopener noreferrer">
-                      <Download className="mr-2 h-4 w-4" /> Descargar (Gratis)
-                    </a>
-                  </Button>
-                </div>
-              )}
-              {selectedTrackForModal.advancedSetupGuidePdfUrl && (
-                <div className="flex justify-between items-center p-3 bg-accent/10 rounded-md border border-accent">
-                   <div>
-                     <FileText className="inline-block mr-2 h-5 w-5 text-accent" />
-                     <span>Guía de Setup Avanzada</span>
-                     {selectedTrackForModal.advancedPdfPrice && (
-                       <span className="ml-2 text-sm font-semibold text-accent">
-                         (${selectedTrackForModal.advancedPdfPrice.toFixed(2)} USD)
-                       </span>
-                     )}
-                   </div>
-                  <Button size="sm" variant="default" className="bg-accent hover:bg-accent/90" disabled> {/* Placeholder: payment logic needed */}
-                    <ShoppingCart className="mr-2 h-4 w-4" /> Comprar Guía
-                  </Button>
-                </div>
-              )}
-              {!(selectedTrackForModal.technicalSheetPdfUrl || selectedTrackForModal.basicSetupGuidePdfUrl || selectedTrackForModal.advancedSetupGuidePdfUrl) && (
-                <p className="text-sm text-muted-foreground text-center">No hay recursos PDF adicionales para esta pista por el momento.</p>
+            <div className="space-y-3 py-4">
+              {hasAnyResourceForModal ? (
+                resourceItems.map((item) => {
+                  const isValidUrl = item.url && item.url !== "#";
+                  return (
+                    <div key={item.label} className={`flex justify-between items-center p-3 rounded-md ${isValidUrl && !item.isFree ? 'bg-accent/10 border border-accent' : 'bg-muted/50'}`}>
+                      <div>
+                        <FileText className={`inline-block mr-2 h-5 w-5 ${isValidUrl && !item.isFree ? 'text-accent' : 'text-primary'}`} />
+                        <span>{item.label}</span>
+                        {!item.isFree && isValidUrl && typeof item.price === 'number' && (
+                          <span className="ml-2 text-sm font-semibold text-accent">
+                            (${item.price.toFixed(2)} USD)
+                          </span>
+                        )}
+                      </div>
+                      {isValidUrl ? (
+                        item.isFree ? (
+                          <Button size="sm" asChild>
+                            <a href={item.url} target="_blank" rel="noopener noreferrer">
+                              <Download className="mr-2 h-4 w-4" /> Descargar (Gratis)
+                            </a>
+                          </Button>
+                        ) : (
+                          <Button size="sm" variant="default" className="bg-accent hover:bg-accent/90" disabled>
+                            <ShoppingCart className="mr-2 h-4 w-4" /> Comprar Guía
+                          </Button>
+                        )
+                      ) : (
+                        <Badge variant="outline">No disponible</Badge>
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                 <p className="text-sm text-muted-foreground text-center py-4">No hay recursos PDF específicos (Ficha Técnica, Guía Básica/Avanzada) para esta pista por el momento.</p>
               )}
             </div>
             <DialogFooter>
@@ -311,3 +325,5 @@ export default function KartingHubPage() {
     </div>
   );
 }
+
+    

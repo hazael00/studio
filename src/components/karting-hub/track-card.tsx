@@ -3,7 +3,7 @@ import type { Track } from '@/types/karting';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MapPin, ExternalLink, Download, BarChartHorizontalBig, FileText } from 'lucide-react';
+import { MapPin, ExternalLink, FileText } from 'lucide-react';
 
 interface TrackCardProps {
   track: Track;
@@ -11,7 +11,7 @@ interface TrackCardProps {
 }
 
 export function TrackCard({ track, onOpenResourcesModal }: TrackCardProps) {
-  const hasResources = track.technicalSheetPdfUrl || track.basicSetupGuidePdfUrl || track.advancedSetupGuidePdfUrl || track.setupGuidePdfUrl || track.strategyGuidePdfUrl;
+  const hasResources = track.technicalSheetPdfUrl || track.basicSetupGuidePdfUrl || track.advancedSetupGuidePdfUrl;
 
   return (
     <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
@@ -67,3 +67,5 @@ export function TrackCard({ track, onOpenResourcesModal }: TrackCardProps) {
     </Card>
   );
 }
+
+    

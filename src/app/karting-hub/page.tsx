@@ -5,133 +5,11 @@ import { useState, useMemo } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
 import { MapComponent } from '@/components/karting-hub/map-component';
 import { TrackCard } from '@/components/karting-hub/track-card';
+import { initialTracksData } from '@/lib/karting-data'; // Import from new location
 import type { Track } from '@/types/karting';
-import { MapPinned, Search, Download, FileText, ShoppingCart } from 'lucide-react';
+import { MapPinned, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-
-const initialTracksData: Track[] = [
-  {
-    id: "kn-mex",
-    name: "Kartódromo KBR",
-    location: "Ciudad de México, México",
-    countryCode: "MX",
-    length: "1.1 km",
-    corners: 12,
-    description: "Pista técnica y rápida, sede de campeonatos nacionales e internacionales. Excelente para desarrollar habilidades de manejo.",
-    imageUrl: "https://placehold.co/400x250.png",
-    imageHint: "karting track mexico",
-    website: "https://www.kartodromokbr.com",
-    technicalSheetPdfUrl: "/pdf/kbr-technical-sheet.pdf",
-    basicSetupGuidePdfUrl: "/pdf/kbr-basic-setup.pdf",
-    advancedSetupGuidePdfUrl: "/pdf/kbr-advanced-setup.pdf",
-    advancedPdfPrice: 1.99,
-    layoutImageUrl: "https://placehold.co/100x60.png",
-    layoutImageHint: "track layout simple",
-    features: ["Homologada FIA", "Karts de Renta", "Tienda de Partes"]
-  },
-  {
-    id: "sgk-ita",
-    name: "South Garda Karting",
-    location: "Lonato del Garda, Italia",
-    countryCode: "IT",
-    length: "1.2 km",
-    corners: 10,
-    description: "Una de las pistas más famosas del mundo, conocida por sus carreras de alto nivel y su desafiante trazado.",
-    imageUrl: "https://placehold.co/400x250.png",
-    imageHint: "south garda karting aerial",
-    website: "https://www.southgardakarting.it",
-    technicalSheetPdfUrl: "/pdf/sgk-technical-sheet.pdf",
-    basicSetupGuidePdfUrl: "/pdf/sgk-basic-setup.pdf",
-    // No advanced setup for this one
-    layoutImageUrl: "https://placehold.co/100x60.png",
-    layoutImageHint: "track layout complex",
-    features: ["Homologada FIA", "Restaurante", "Tienda de Partes"]
-  },
-  {
-    id: "skusa-usa",
-    name: "SKUSA SuperNationals Track (LVCC)",
-    location: "Las Vegas, USA",
-    countryCode: "US",
-    length: "1.3 km", 
-    corners: 14, 
-    description: "Pista temporal para el prestigioso evento SuperNationals. Rápida, exigente y con muros cercanos.",
-    imageUrl: "https://placehold.co/400x250.png",
-    imageHint: "las vegas karting race",
-    layoutImageUrl: "https://placehold.co/100x60.png",
-    layoutImageHint: "temporary track layout",
-    features: ["Evento Especial"],
-    // No PDFs for this one
-  },
-  {
-    id: "genk-bel",
-    name: "Karting Genk",
-    location: "Genk, Bélgica",
-    countryCode: "BE",
-    length: "1.36 km",
-    corners: 15,
-    description: "'Home of Champions'. Una pista de clase mundial que ha visto competir a muchas estrellas de F1.",
-    imageUrl: "https://placehold.co/400x250.png",
-    imageHint: "karting genk track",
-    website: "https://www.kartinggenk.be",
-    basicSetupGuidePdfUrl: "/pdf/genk-basic-setup.pdf",
-    advancedSetupGuidePdfUrl: "/pdf/genk-advanced-setup.pdf",
-    advancedPdfPrice: 2.49,
-    layoutImageUrl: "https://placehold.co/100x60.png",
-    layoutImageHint: "professional track layout",
-    features: ["Homologada FIA", "Iluminación Nocturna", "Karts de Renta"]
-  },
-   {
-    id: "adria-ita",
-    name: "Adria Karting Raceway",
-    location: "Adria, Italia",
-    countryCode: "IT",
-    length: "1.302 km",
-    corners: 9,
-    description: "Complejo moderno con instalaciones de primera, frecuentemente utilizado para eventos FIA Karting.",
-    imageUrl: "https://placehold.co/400x250.png",
-    imageHint: "adria karting raceway",
-    website: "https://www.adriaraceway.com",
-    technicalSheetPdfUrl: "/pdf/adria-technical-sheet.pdf",
-    layoutImageUrl: "https://placehold.co/100x60.png",
-    layoutImageHint: "modern track layout",
-    features: ["Homologada FIA", "Restaurante"],
-  },
-  {
-    id: "pf-int-uk",
-    name: "PF International Kart Circuit",
-    location: "Brandon, Reino Unido",
-    countryCode: "UK",
-    length: "1.382 km",
-    corners: 14,
-    description: "Una de las pistas más importantes del Reino Unido, sede de campeonatos mundiales y europeos.",
-    imageUrl: "https://placehold.co/400x250.png",
-    imageHint: "pf international karting",
-    website: "https://tvkc.co.uk",
-    basicSetupGuidePdfUrl: "/pdf/pfi-basic-setup.pdf",
-    layoutImageUrl: "https://placehold.co/100x60.png",
-    layoutImageHint: "uk track layout",
-    features: ["Homologada FIA", "Karts de Renta", "Tienda de Partes"],
-  },
-  {
-    id: "valencia-esp",
-    name: "Kartódromo Internacional Lucas Guerrero",
-    location: "Chiva, Valencia, España",
-    countryCode: "ES",
-    length: "1.428 km",
-    corners: 16,
-    description: "Pista moderna y versátil, sede de eventos internacionales y con excelentes instalaciones.",
-    imageUrl: "https://placehold.co/400x250.png",
-    imageHint: "karting valencia spain",
-    website: "https://www.kartodromolucasguerrero.com/",
-    features: ["Homologada FIA", "Karts de Renta", "Restaurante", "Iluminación Nocturna"],
-    advancedSetupGuidePdfUrl: "/pdf/valencia-advanced-setup.pdf",
-    advancedPdfPrice: 0.99,
-  }
-];
 
 const countryOptions = [
   { value: "all", label: "Todos los países" },
@@ -150,7 +28,8 @@ const featureOptions = [
   { value: "Karts de Renta", label: "Karts de Renta" },
   { value: "Restaurante", label: "Restaurante" },
   { value: "Tienda de Partes", label: "Tienda de Partes" },
-  { value: "Evento Especial", label: "Evento Especial" },
+  { value: "Evento Especial Anual", label: "Evento Especial Anual" },
+  { value: "Escuela de Pilotos", label: "Escuela de Pilotos" },
 ];
 
 
@@ -158,8 +37,6 @@ export default function KartingHubPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [selectedFeature, setSelectedFeature] = useState('all');
-  const [selectedTrackForModal, setSelectedTrackForModal] = useState<Track | null>(null);
-  const [isResourcesModalOpen, setIsResourcesModalOpen] = useState(false);
 
   const filteredTracks = useMemo(() => {
     return initialTracksData.filter(track => {
@@ -174,33 +51,6 @@ export default function KartingHubPage() {
       return matchesSearchTerm && matchesCountry && matchesFeature;
     });
   }, [searchTerm, selectedCountry, selectedFeature]);
-
-  const openResourcesModal = (track: Track) => {
-    setSelectedTrackForModal(track);
-    setIsResourcesModalOpen(true);
-  };
-
-  const resourceItems = [
-    {
-      label: "Ficha Técnica",
-      url: selectedTrackForModal?.technicalSheetPdfUrl,
-      isFree: true,
-    },
-    {
-      label: "Guía de Setup Básica",
-      url: selectedTrackForModal?.basicSetupGuidePdfUrl,
-      isFree: true,
-    },
-    {
-      label: "Guía de Setup Avanzada",
-      url: selectedTrackForModal?.advancedSetupGuidePdfUrl,
-      isFree: false,
-      price: selectedTrackForModal?.advancedPdfPrice,
-    },
-  ];
-
-  const hasAnyResourceForModal = resourceItems.some(item => item.url && item.url !== "#");
-
 
   return (
     <div>
@@ -263,67 +113,12 @@ export default function KartingHubPage() {
       {filteredTracks.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTracks.map(track => (
-            <TrackCard key={track.id} track={track} onOpenResourcesModal={openResourcesModal} />
+            <TrackCard key={track.id} track={track} />
           ))}
         </div>
       ) : (
         <p className="text-center text-muted-foreground py-10">No se encontraron pistas con los filtros seleccionados.</p>
       )}
-
-      {selectedTrackForModal && (
-        <Dialog open={isResourcesModalOpen} onOpenChange={setIsResourcesModalOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Recursos para: {selectedTrackForModal.name}</DialogTitle>
-              <DialogDescription>
-                Guías y fichas técnicas disponibles para esta pista.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-3 py-4">
-              {hasAnyResourceForModal ? (
-                resourceItems.map((item) => {
-                  const isValidUrl = item.url && item.url !== "#";
-                  return (
-                    <div key={item.label} className={`flex justify-between items-center p-3 rounded-md ${isValidUrl && !item.isFree ? 'bg-accent/10 border border-accent' : 'bg-muted/50'}`}>
-                      <div>
-                        <FileText className={`inline-block mr-2 h-5 w-5 ${isValidUrl && !item.isFree ? 'text-accent' : 'text-primary'}`} />
-                        <span>{item.label}</span>
-                        {!item.isFree && isValidUrl && typeof item.price === 'number' && (
-                          <span className="ml-2 text-sm font-semibold text-accent">
-                            (${item.price.toFixed(2)} USD)
-                          </span>
-                        )}
-                      </div>
-                      {isValidUrl ? (
-                        item.isFree ? (
-                          <Button size="sm" asChild>
-                            <a href={item.url} target="_blank" rel="noopener noreferrer">
-                              <Download className="mr-2 h-4 w-4" /> Descargar (Gratis)
-                            </a>
-                          </Button>
-                        ) : (
-                          <Button size="sm" variant="default" className="bg-accent hover:bg-accent/90" disabled>
-                            <ShoppingCart className="mr-2 h-4 w-4" /> Comprar Guía
-                          </Button>
-                        )
-                      ) : (
-                        <Badge variant="outline">No disponible</Badge>
-                      )}
-                    </div>
-                  );
-                })
-              ) : (
-                 <p className="text-sm text-muted-foreground text-center py-4">No hay recursos PDF específicos (Ficha Técnica, Guía Básica/Avanzada) para esta pista por el momento.</p>
-              )}
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsResourcesModalOpen(false)}>Cerrar</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 }
-
-    

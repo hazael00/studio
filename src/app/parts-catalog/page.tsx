@@ -40,7 +40,7 @@ const initialPartsData: Part[] = [
     supplierIds: ['supplier-001', 'supplier-003'],
     averageRating: 4.8,
     reviews: initialReviews,
-    tags: ["High Performance", "Rotax Series"]
+    tags: ["High Performance", "Rotax Series", "EVO Technology"]
   },
   {
     id: 'chassis-001',
@@ -57,7 +57,7 @@ const initialPartsData: Part[] = [
     supplierIds: ['supplier-002'],
     averageRating: 4.5,
     reviews: [initialReviews[0], initialReviews[1]],
-    tags: ["FIA Homologated", "Premium"]
+    tags: ["FIA Homologated", "Premium Quality", "Racing"]
   },
   {
     id: 'tires-001',
@@ -73,7 +73,7 @@ const initialPartsData: Part[] = [
     supplierIds: ['supplier-001', 'supplier-002', 'supplier-003'],
     averageRating: 4.2,
     reviews: [initialReviews[2]],
-    tags: ["Rotax Max Challenge", "Durable"]
+    tags: ["Rotax Max Challenge", "Durable Compound"]
   },
   {
     id: 'brakes-001',
@@ -88,6 +88,7 @@ const initialPartsData: Part[] = [
     status: 'Available',
     technicalSpecs: { DiscMaterial: 'Steel', PistonCount: '1', DiscType: 'Floating' },
     supplierIds: ['supplier-002'],
+    tags: ["Self-adjusting", "OTK Original"]
   },
    {
     id: 'electronics-001',
@@ -101,7 +102,7 @@ const initialPartsData: Part[] = [
     status: 'Discontinued',
     compatibilityInfo: 'Universal, requiere soportes específicos según el volante. Software de análisis MyChron disponible para PC.',
     supplierIds: ['supplier-003'],
-    tags: ["Data Acquisition", "GPS"]
+    tags: ["Data Acquisition", "GPS", "Telemetry"]
   },
 ];
 
@@ -230,13 +231,14 @@ export default function PartsCatalogPage() {
   
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 !== 0;
+    const halfStar = rating % 1 !== 0; // Simple half star logic
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    
     return (
       <div className="flex items-center">
         {[...Array(fullStars)].map((_, i) => <Star key={`full-${i}`} className="w-5 h-5 text-yellow-400 fill-yellow-400" />)}
-        {halfStar && <Star key="half" className="w-5 h-5 text-yellow-400 fill-yellow-200" />} {/* Approximation of half star */}
-        {[...Array(emptyStars)].map((_, i) => <Star key={`empty-${i}`} className="w-5 h-5 text-yellow-400" />)}
+        {halfStar && <Star key="half" className="w-5 h-5 text-yellow-400" style={{ clipPath: 'inset(0 50% 0 0)' }} />} {/* Half-filled star */}
+        {[...Array(emptyStars)].map((_, i) => <Star key={`empty-${i}`} className="w-5 h-5 text-gray-300" />)}
       </div>
     );
   };
@@ -264,8 +266,8 @@ export default function PartsCatalogPage() {
             <Image 
               src="https://placehold.co/1200x400.png" 
               alt="Visualizador 3D de Kart Placeholder" 
-              fill // Changed from layout="fill" objectFit="cover" to just fill
-              className="rounded-lg object-cover" // Ensure object-cover is present
+              fill
+              className="rounded-lg object-cover"
               data-ai-hint="3d kart diagram"
             />
             <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center rounded-lg p-4">
@@ -397,7 +399,7 @@ export default function PartsCatalogPage() {
                         <div className="flex items-center justify-center gap-1">
                           {supplier.rating.toFixed(1)} <Star className="w-4 h-4 text-yellow-400 fill-yellow-400"/>
                         </div>
-                      ) : 'N/A'}
+                      ) : <span className="text-xs text-muted-foreground">N/A</span>}
                     </TableCell>
                     <TableCell className="text-right">
                       {supplier.website ? (
@@ -505,7 +507,7 @@ export default function PartsCatalogPage() {
                   {selectedPart.supplierIds.map(supplierId => {
                     const supplier = initialSuppliersData.find(s => s.id === supplierId);
                     // Mock price - in reality this would come from supplier data
-                    const mockPrice = selectedPart.priceRange ? parseFloat(selectedPart.priceRange.split(" - ")[0].replace("$","")) * (1 + (Math.random() * 0.2 - 0.1)) : null;
+                    const mockPrice = selectedPart.priceRange ? parseFloat(selectedPart.priceRange.split(" - ")[0].replace("$","").replace(",","")) * (1 + (Math.random() * 0.2 - 0.1)) : null;
 
                     return supplier ? (
                       <Card key={supplier.id} className="bg-muted/50 p-3">
@@ -518,13 +520,13 @@ export default function PartsCatalogPage() {
                             <p className="text-md font-semibold text-primary">
                               {mockPrice ? `$${mockPrice.toFixed(2)}` : "Consultar"}
                             </p>
-                            {supplier.website && (
+                            {supplier.website ? (
                               <Button variant="link" size="sm" asChild className="p-0 h-auto text-xs">
                                 <a href={supplier.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
                                   <Globe className="mr-1 h-3 w-3" /> Visitar
                                 </a>
                               </Button>
-                            )}
+                            ) : <span className="text-xs text-muted-foreground">Web no disponible</span>}
                           </div>
                         </div>
                       </Card>
@@ -578,4 +580,3 @@ export default function PartsCatalogPage() {
     </div>
   );
 }
-

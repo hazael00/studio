@@ -11,7 +11,7 @@ interface PartCardProps {
   onViewDetailsClick: (part: Part) => void;
 }
 
-const statusIcons = {
+const statusIcons: Record<Part['status'], React.ReactElement> = {
   Available: <PackageCheck className="w-4 h-4 text-green-500" />,
   'Pre-Order': <Hourglass className="w-4 h-4 text-yellow-500" />,
   Discontinued: <PackageX className="w-4 h-4 text-red-500" />,
@@ -67,4 +67,3 @@ export function PartCard({ part, onViewDetailsClick }: PartCardProps) {
     </Card>
   );
 }
-

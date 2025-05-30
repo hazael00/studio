@@ -17,4 +17,6 @@ export interface Track {
   strategyGuidePdfUrl?: string; // Placeholder
   layoutImageUrl?: string; // Placeholder para imagen del trazado
   layoutImageHint?: string; // Placeholder
+  features?: string[]; // Características de la pista, ej: "Homologada FIA", "Iluminación Nocturna"
 }
+

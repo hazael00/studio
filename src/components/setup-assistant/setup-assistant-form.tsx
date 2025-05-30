@@ -12,7 +12,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Bot, AlertTriangle, Settings2, Thermometer, GaugeIcon, User, NotebookText } from 'lucide-react';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Loader2, Bot, AlertTriangle, Settings2, Thermometer, GaugeIcon, User, NotebookText, Info, MapPin, CloudSun, UserCircle, GripVertical, TrendingUp } from 'lucide-react';
 import { getSetupRecommendation, type SetupRecommendationInput, type SetupRecommendationOutput } from '@/ai/flows/setup-recommendation-flow';
 
 const trackOptions = [
@@ -41,6 +42,25 @@ const formSchema = z.object({
 });
 
 type FormData = z.infer<typeof formSchema>;
+
+interface InfoPopoverProps {
+  explanation: string;
+}
+
+const InfoButtonPopover: React.FC<InfoPopoverProps> = ({ explanation }) => (
+  <Popover>
+    <PopoverTrigger asChild>
+      <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-accent">
+        <Info className="h-4 w-4" />
+        <span className="sr-only">Más información</span>
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent className="w-80 text-sm" side="right" align="start">
+      {explanation}
+    </PopoverContent>
+  </Popover>
+);
+
 
 export function SetupAssistantForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -84,7 +104,7 @@ export function SetupAssistantForm() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+    <>
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle>Ingresa los Datos de tu Sesión</CardTitle>
@@ -93,7 +113,10 @@ export function SetupAssistantForm() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-6">
             <div>
-              <Label htmlFor="trackName" className="flex items-center gap-2"><Settings2 className="w-4 h-4" />Pista</Label>
+              <div className="flex items-center gap-2 mb-1">
+                <Label htmlFor="trackName" className="flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" />Pista</Label>
+                <InfoButtonPopover explanation="Selecciona la pista donde vas a correr o la que más se parezca. Si no está en la lista, elige 'Otro' y especifica el nombre y ubicación en 'Notas Adicionales'. Esto ayuda a S4NT1 a considerar características específicas del trazado (tipo de asfalto, curvas, etc.)." />
+              </div>
               <Controller
                 name="trackName"
                 control={control}
@@ -114,7 +137,10 @@ export function SetupAssistantForm() {
             </div>
 
             <div>
-              <Label htmlFor="weatherConditions" className="flex items-center gap-2"><Thermometer className="w-4 h-4" />Condiciones Climáticas</Label>
+              <div className="flex items-center gap-2 mb-1">
+                <Label htmlFor="weatherConditions" className="flex items-center gap-2"><CloudSun className="w-4 h-4 text-primary" />Condiciones Climáticas</Label>
+                <InfoButtonPopover explanation="Describe el ambiente: temperatura, si está soleado, nublado o lluvioso, y cómo está la pista (seca, húmeda, mojada). Detalles como el viento o la humedad también son útiles. El clima afecta mucho el agarre y el rendimiento del motor." />
+              </div>
               <Textarea
                 id="weatherConditions"
                 {...register("weatherConditions")}
@@ -125,17 +151,23 @@ export function SetupAssistantForm() {
             </div>
 
             <div>
-              <Label htmlFor="kartDetails" className="flex items-center gap-2"><GaugeIcon className="w-4 h-4" />Detalles del Kart/Motor</Label>
+              <div className="flex items-center gap-2 mb-1">
+                 <Label htmlFor="kartDetails" className="flex items-center gap-2"><Settings2 className="w-4 h-4 text-primary" />Detalles del Kart/Motor</Label>
+                 <InfoButtonPopover explanation="Especifica la marca y modelo de tu chasis, el tipo de motor y la categoría. Ejemplo: 'Chasis Tony Kart Racer 401RR, Motor Rotax Max Senior EVO, categoría Senior Max'. Conocer tu material es clave." />
+              </div>
               <Input
                 id="kartDetails"
                 {...register("kartDetails")}
-                placeholder="Ej: Rotax Max Senior EVO, Chasis Tony Kart 401RR"
+                placeholder="Ej: Chasis Tony Kart Racer 401RR, Motor Rotax Max Senior EVO"
               />
               {errors.kartDetails && <p className="text-sm text-destructive mt-1">{errors.kartDetails.message}</p>}
             </div>
             
             <div>
-              <Label htmlFor="tireInfo" className="flex items-center gap-2"><Settings2 className="w-4 h-4" />Información de Neumáticos</Label>
+              <div className="flex items-center gap-2 mb-1">
+                <Label htmlFor="tireInfo" className="flex items-center gap-2"><GripVertical className="w-4 h-4 text-primary" />Información de Neumáticos</Label>
+                <InfoButtonPopover explanation="Indica el tipo de neumáticos (marca y modelo, ej: Mojo D5, LeCont Rojos) y su estado (nuevos, cuántas vueltas tienen). Los neumáticos son tu único contacto con la pista, ¡importantísimos!" />
+              </div>
               <Input
                 id="tireInfo"
                 {...register("tireInfo")}
@@ -145,7 +177,10 @@ export function SetupAssistantForm() {
             </div>
 
             <div>
-              <Label htmlFor="driverExperience" className="flex items-center gap-2"><User className="w-4 h-4" />Experiencia del Piloto</Label>
+              <div className="flex items-center gap-2 mb-1">
+                <Label htmlFor="driverExperience" className="flex items-center gap-2"><UserCircle className="w-4 h-4 text-primary" />Experiencia del Piloto</Label>
+                <InfoButtonPopover explanation="Selecciona tu nivel. Un setup para un principiante buscará más estabilidad, mientras que un piloto avanzado podría preferir un kart más ágil. ¡Sé honesto para mejores recomendaciones!" />
+              </div>
               <Controller
                 name="driverExperience"
                 control={control}
@@ -166,7 +201,10 @@ export function SetupAssistantForm() {
             </div>
 
             <div>
-              <Label htmlFor="currentIssues" className="flex items-center gap-2"><NotebookText className="w-4 h-4" />Notas Adicionales / Problemas (Opcional)</Label>
+              <div className="flex items-center gap-2 mb-1">
+                 <Label htmlFor="currentIssues" className="flex items-center gap-2"><TrendingUp className="w-4 h-4 text-primary" />Sensaciones / Problemas (Opcional)</Label>
+                <InfoButtonPopover explanation="Aquí puedes detallar cualquier problema que estés sintiendo con el setup actual (ej: 'el kart subvira en curvas lentas', 'falta tracción a la salida de las horquillas') o cualquier otra observación relevante que no encaje en los otros campos." />
+              </div>
               <Textarea
                 id="currentIssues"
                 {...register("currentIssues")}
@@ -185,7 +223,7 @@ export function SetupAssistantForm() {
       </Card>
 
       {isLoading && !recommendationOutput && (
-        <Card className="shadow-xl flex flex-col items-center justify-center min-h-[300px] lg:sticky lg:top-8">
+        <Card className="shadow-xl flex flex-col items-center justify-center min-h-[300px] lg:sticky lg:top-8 mt-8 lg:mt-0">
           <CardContent className="text-center p-8">
             <Loader2 className="h-16 w-16 animate-spin text-primary mx-auto mb-6" />
             <p className="text-xl font-semibold text-foreground mb-2">S4NT1 está consultando su base de datos y experiencia...</p>
@@ -195,14 +233,14 @@ export function SetupAssistantForm() {
       )}
 
       {recommendationOutput && !isLoading && (
-        <Card className="shadow-xl lg:sticky lg:top-8">
+        <Card className="shadow-xl lg:sticky lg:top-8 mt-8 lg:mt-0">
           <CardHeader>
             <CardTitle className="text-2xl text-primary flex items-center gap-2">
               <Bot className="w-8 h-8" /> {recommendationOutput.recommendationTitle}
             </CardTitle>
             <CardDescription>S4NT1 ha preparado estas sugerencias para ti:</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 max-h-[calc(100vh-12rem)] overflow-y-auto">
             {recommendationOutput.chassisAdjustments && recommendationOutput.chassisAdjustments.length > 0 && (
               <div>
                 <h4 className="font-semibold text-accent text-lg mb-2">Ajustes de Chasis:</h4>
@@ -272,7 +310,7 @@ export function SetupAssistantForm() {
           </CardContent>
         </Card>
       )}
-    </div>
+    </>
   );
 }
 

@@ -6,9 +6,8 @@ import { PageHeader } from '@/components/ui/page-header';
 import { MapComponent } from '@/components/karting-hub/map-component';
 import { TrackCard } from '@/components/karting-hub/track-card';
 import type { Track } from '@/types/karting';
-import { MapPinned, Search, Filter } from 'lucide-react';
+import { MapPinned, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const initialTracksData: Track[] = [
@@ -23,7 +22,7 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "karting track mexico",
     website: "https://www.kartodromokbr.com",
-    setupGuidePdfUrl: "#",
+    setupGuidePdfUrl: "/pdf/kbr-setup-guide.pdf", // Updated
     strategyGuidePdfUrl: "#",
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "track layout simple",
@@ -40,7 +39,8 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "south garda karting aerial",
     website: "https://www.southgardakarting.it",
-    setupGuidePdfUrl: "#",
+    setupGuidePdfUrl: "/pdf/sgk-setup-guide.pdf", // Updated
+    strategyGuidePdfUrl: "/pdf/sgk-strategy-guide.pdf", // Added
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "track layout complex",
     features: ["Homologada FIA", "Restaurante", "Tienda de Partes"]
@@ -57,7 +57,9 @@ const initialTracksData: Track[] = [
     imageHint: "las vegas karting race",
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "temporary track layout",
-    features: ["Evento Especial"]
+    features: ["Evento Especial"],
+    setupGuidePdfUrl: "#",
+    strategyGuidePdfUrl: "#",
   },
   {
     id: "genk-bel",
@@ -70,7 +72,8 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "karting genk track",
     website: "https://www.kartinggenk.be",
-    strategyGuidePdfUrl: "#",
+    setupGuidePdfUrl: "#", 
+    strategyGuidePdfUrl: "/pdf/genk-strategy-guide.pdf", // Updated
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "professional track layout",
     features: ["Homologada FIA", "Iluminación Nocturna", "Karts de Renta"]
@@ -86,10 +89,11 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "adria karting raceway",
     website: "https://www.adriaraceway.com",
-    setupGuidePdfUrl: "#",
+    setupGuidePdfUrl: "/pdf/adria-setup-guide.pdf", // Updated
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "modern track layout",
-    features: ["Homologada FIA", "Restaurante"]
+    features: ["Homologada FIA", "Restaurante"],
+    strategyGuidePdfUrl: "#",
   },
   {
     id: "pf-int-uk",
@@ -102,10 +106,11 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "pf international karting",
     website: "https://tvkc.co.uk",
-    strategyGuidePdfUrl: "#",
+    strategyGuidePdfUrl: "/pdf/pfi-strategy-guide.pdf", // Updated
     layoutImageUrl: "https://placehold.co/100x60.png",
     layoutImageHint: "uk track layout",
-    features: ["Homologada FIA", "Karts de Renta", "Tienda de Partes"]
+    features: ["Homologada FIA", "Karts de Renta", "Tienda de Partes"],
+    setupGuidePdfUrl: "#",
   },
   {
     id: "valencia-esp",
@@ -118,7 +123,9 @@ const initialTracksData: Track[] = [
     imageUrl: "https://placehold.co/400x250.png",
     imageHint: "karting valencia spain",
     website: "https://www.kartodromolucasguerrero.com/",
-    features: ["Homologada FIA", "Karts de Renta", "Restaurante", "Iluminación Nocturna"]
+    features: ["Homologada FIA", "Karts de Renta", "Restaurante", "Iluminación Nocturna"],
+    setupGuidePdfUrl: "#",
+    strategyGuidePdfUrl: "#",
   }
 ];
 

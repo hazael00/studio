@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 
 interface PartCardProps {
   part: Part;
+  onViewDetailsClick: (part: Part) => void;
 }
 
 const statusIcons = {
@@ -16,7 +17,7 @@ const statusIcons = {
   Discontinued: <PackageX className="w-4 h-4 text-red-500" />,
 };
 
-export function PartCard({ part }: PartCardProps) {
+export function PartCard({ part, onViewDetailsClick }: PartCardProps) {
   return (
     <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
       <div className="relative">
@@ -50,7 +51,7 @@ export function PartCard({ part }: PartCardProps) {
         </div>
       </CardHeader>
       <CardContent className="py-2">
-        <p className="text-sm text-muted-foreground h-12 overflow-hidden text-ellipsis">{part.description}</p>
+        <p className="text-sm text-muted-foreground h-12 overflow-hidden text-ellipsis">{part.description.substring(0, 100)}...</p>
         {part.priceRange && (
           <div className="flex items-center gap-2 mt-2">
             <DollarSign className="w-5 h-5 text-green-600" /> 
@@ -59,10 +60,11 @@ export function PartCard({ part }: PartCardProps) {
         )}
       </CardContent>
       <CardFooter>
-        <Button className="w-full">
+        <Button className="w-full" onClick={() => onViewDetailsClick(part)}>
           <Info className="mr-2 h-4 w-4" /> Ver Detalles
         </Button>
       </CardFooter>
     </Card>
   );
 }
+

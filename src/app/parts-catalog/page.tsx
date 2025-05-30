@@ -2,24 +2,25 @@
 "use client";
 
 import { useState, useMemo } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { PageHeader } from '@/components/ui/page-header';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { ShoppingCart, Search, Package, Users, Globe, DraftingCompass } from 'lucide-react'; // Changed Wrench to ShoppingCart, added DraftingCompass
-import type { Part, Supplier } from '@/types/parts';
-import { PartCard } from '@/components/parts-catalog/part-card';
+import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'; // Added Dialog components
+import { ShoppingCart, Search, Package, Users, Globe, DraftingCompass, Info, X } from 'lucide-react';
+import type { Part, Supplier } from '@/types/parts';
+import { PartCard } from '@/components/parts-catalog/part-card';
 
 const initialPartsData: Part[] = [
   {
     id: 'engine-001',
     name: 'Motor Rotax Max Senior EVO',
-    description: 'Motor de alto rendimiento para categoría Senior.',
+    description: 'Motor de alto rendimiento para categoría Senior, con tecnología EVO para una entrega de potencia optimizada y mayor durabilidad. Ideal para competidores serios.',
     category: 'Engine',
     brand: 'Rotax',
     partNumber: 'ROTAX-MAX-SR-EVO',
@@ -27,40 +28,41 @@ const initialPartsData: Part[] = [
     imageUrl: 'https://placehold.co/400x250.png',
     imageHint: 'kart engine rotax',
     status: 'Available',
-    compatibilityInfo: 'Compatible con chasis estándar Senior Max.',
-    technicalSpecs: { Bore: '54mm', Stroke: '54.5mm', Power: '30hp' },
+    compatibilityInfo: 'Compatible con chasis estándar Senior Max. Requiere batería y sistema de escape específicos.',
+    technicalSpecs: { Bore: '54mm', Stroke: '54.5mm', Power: '30hp @ 11,500 RPM', Cooling: 'Water-cooled' },
     supplierIds: ['supplier-001', 'supplier-003'],
   },
   {
     id: 'chassis-001',
     name: 'Chasis Tony Kart Racer 401RR',
-    description: 'Chasis de competición homologado por la FIA.',
+    description: 'Chasis de competición homologado por la FIA, fabricado con tubos de cromo molibdeno de alta calidad. Ofrece una excelente respuesta y adaptabilidad a diferentes condiciones de pista.',
     category: 'Chassis',
     brand: 'Tony Kart',
     priceRange: '$4,500 - $5,200',
     imageUrl: 'https://placehold.co/400x250.png',
     imageHint: 'kart chassis tonykart',
     status: 'Available',
-    compatibilityInfo: 'Adecuado para motores OK, KZ, y Rotax.',
+    compatibilityInfo: 'Adecuado para motores OK, KZ, y Rotax. Diversas opciones de configuración de rigidez.',
+    technicalSpecs: { TubingDiameter: '30mm/32mm', Wheelbase: '1045mm', AxleDiameter: '50mm' },
     supplierIds: ['supplier-002'],
   },
   {
     id: 'tires-001',
     name: 'Neumáticos Mojo D5 (Set)',
-    description: 'Juego de neumáticos slick de compuesto medio.',
+    description: 'Juego de neumáticos slick de compuesto medio, conocido por su consistencia y durabilidad. Utilizado en múltiples campeonatos Rotax.',
     category: 'Tires',
     brand: 'Mojo',
     priceRange: '$200 - $250',
     imageUrl: 'https://placehold.co/400x250.png',
     imageHint: 'kart tires mojo',
     status: 'Pre-Order',
-    technicalSpecs: { Compound: 'Medium', Type: 'Slick' },
+    technicalSpecs: { Compound: 'Medium', Type: 'Slick', FrontSize: '10x4.60-5', RearSize: '11x7.10-5' },
     supplierIds: ['supplier-001', 'supplier-002', 'supplier-003'],
   },
   {
     id: 'brakes-001',
     name: 'Sistema de Freno OTK BSD',
-    description: 'Sistema de freno trasero completo, autoajustable.',
+    description: 'Sistema de freno trasero completo, autoajustable, con pinza de pistón simple y disco flotante. Ofrece una frenada potente y modulable.',
     category: 'Brakes',
     brand: 'OTK',
     partNumber: 'OTK-BSD-001',
@@ -68,19 +70,20 @@ const initialPartsData: Part[] = [
     imageUrl: 'https://placehold.co/400x250.png',
     imageHint: 'kart brake system',
     status: 'Available',
+    technicalSpecs: { DiscMaterial: 'Steel', PistonCount: '1', DiscType: 'Floating' },
     supplierIds: ['supplier-002'],
   },
    {
     id: 'electronics-001',
     name: 'MyChron 5S 2T',
-    description: 'Sistema de adquisición de datos con GPS y dos entradas de temperatura.',
+    description: 'Sistema de adquisición de datos con GPS integrado y dos entradas de temperatura. Ideal para análisis de rendimiento y telemetría.',
     category: 'Electronics',
     brand: 'AiM',
     priceRange: '$700 - $800',
     imageUrl: 'https://placehold.co/400x250.png',
     imageHint: 'kart data logger',
     status: 'Discontinued',
-    compatibilityInfo: 'Universal, requiere soportes específicos.',
+    compatibilityInfo: 'Universal, requiere soportes específicos según el volante. Software de análisis MyChron disponible para PC.',
     supplierIds: ['supplier-003'],
   },
 ];
@@ -179,6 +182,14 @@ export default function PartsCatalogPage() {
   const [searchTermSuppliers, setSearchTermSuppliers] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('all');
 
+  const [selectedPart, setSelectedPart] = useState<Part | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+
+  const handleViewDetailsClick = (part: Part) => {
+    setSelectedPart(part);
+    setIsDetailModalOpen(true);
+  };
+
   const filteredParts = useMemo(() => {
     return initialPartsData.filter(part => {
       const matchesSearch = searchTermParts === '' ||
@@ -275,7 +286,7 @@ export default function PartsCatalogPage() {
         </Card>
         {filteredParts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredParts.map(part => <PartCard key={part.id} part={part} />)}
+            {filteredParts.map(part => <PartCard key={part.id} part={part} onViewDetailsClick={handleViewDetailsClick} />)}
           </div>
         ) : (
           <Card className="text-center text-muted-foreground py-10 shadow-sm">
@@ -378,6 +389,91 @@ export default function PartsCatalogPage() {
           </Card>
         )}
       </section>
+
+      {selectedPart && (
+        <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+          <DialogContent className="sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl">{selectedPart.name}</DialogTitle>
+              <DialogDescription>{selectedPart.brand} - {selectedPart.category}</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-6 py-4">
+              <div className="relative aspect-video w-full">
+                <Image 
+                  src={selectedPart.imageUrl} 
+                  alt={selectedPart.name} 
+                  layout="fill" 
+                  objectFit="contain" 
+                  className="rounded-md"
+                  data-ai-hint={selectedPart.imageHint}
+                />
+              </div>
+              <div>
+                <h4 className="font-semibold mb-1 text-lg">Descripción:</h4>
+                <p className="text-sm text-muted-foreground">{selectedPart.description}</p>
+              </div>
+
+              {selectedPart.technicalSpecs && Object.keys(selectedPart.technicalSpecs).length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2 text-lg">Especificaciones Técnicas:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                    {Object.entries(selectedPart.technicalSpecs).map(([key, value]) => (
+                      <li key={key}><strong>{key}:</strong> {value}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {selectedPart.compatibilityInfo && (
+                <div>
+                  <h4 className="font-semibold mb-1 text-lg">Compatibilidad:</h4>
+                  <p className="text-sm text-muted-foreground">{selectedPart.compatibilityInfo}</p>
+                </div>
+              )}
+              
+              {selectedPart.priceRange && (
+                <div>
+                  <h4 className="font-semibold mb-1 text-lg">Rango de Precio Estimado:</h4>
+                  <p className="text-lg font-bold text-primary">{selectedPart.priceRange}</p>
+                </div>
+              )}
+
+              {selectedPart.supplierIds && selectedPart.supplierIds.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2 text-lg">Proveedores Conocidos:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedPart.supplierIds.map(supplierId => {
+                      const supplier = initialSuppliersData.find(s => s.id === supplierId);
+                      return supplier ? (
+                        <Badge key={supplier.id} variant="secondary">
+                          {supplier.website ? (
+                            <a href={supplier.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                              {supplier.name}
+                            </a>
+                          ) : (
+                            supplier.name
+                          )}
+                        </Badge>
+                      ) : null;
+                    })}
+                  </div>
+                </div>
+              )}
+               <Badge 
+                  variant={selectedPart.status === 'Available' ? 'default' : selectedPart.status === 'Pre-Order' ? 'secondary' : 'destructive'} 
+                  className="w-fit text-sm py-1 px-3"
+                >
+                 {selectedPart.status}
+              </Badge>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDetailModalOpen(false)}>
+                <X className="mr-2 h-4 w-4" /> Cerrar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

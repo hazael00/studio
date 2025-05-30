@@ -1,9 +1,13 @@
 
+"use client";
+
 import type { Track } from '@/types/karting';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MapPin, ExternalLink, FileText } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { MapPin, ExternalLink, FileText, MoreVertical, Flag, UserCheck } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface TrackCardProps {
   track: Track;
@@ -11,7 +15,22 @@ interface TrackCardProps {
 }
 
 export function TrackCard({ track, onOpenResourcesModal }: TrackCardProps) {
+  const { toast } = useToast();
   const hasResources = track.technicalSheetPdfUrl || track.basicSetupGuidePdfUrl || track.advancedSetupGuidePdfUrl;
+
+  const handleReportData = () => {
+    toast({
+      title: "Reportar Datos Incorrectos",
+      description: `Funcionalidad para reportar datos incorrectos para la pista "${track.name}" próximamente.`,
+    });
+  };
+
+  const handleClaimTrack = () => {
+    toast({
+      title: "Reclamar Pista",
+      description: `Funcionalidad para reclamar la propiedad de la pista "${track.name}" próximamente.`,
+    });
+  };
 
   return (
     <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
@@ -38,16 +57,38 @@ export function TrackCard({ track, onOpenResourcesModal }: TrackCardProps) {
         )}
       </div>
       <CardHeader className="flex-grow pb-2">
-        <CardTitle className="text-xl mb-1">{track.name}</CardTitle>
-        <CardDescription className="text-sm flex items-center gap-1">
-          <MapPin className="w-4 h-4 text-muted-foreground" /> {track.location} ({track.countryCode})
-        </CardDescription>
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle className="text-xl mb-1">{track.name}</CardTitle>
+            <CardDescription className="text-sm flex items-center gap-1">
+              <MapPin className="w-4 h-4 text-muted-foreground" /> {track.location} ({track.countryCode})
+            </CardDescription>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
+                <MoreVertical className="h-5 w-5" />
+                <span className="sr-only">Más acciones</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleReportData}>
+                <Flag className="mr-2 h-4 w-4" />
+                Reportar Datos Incorrectos
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleClaimTrack}>
+                <UserCheck className="mr-2 h-4 w-4" />
+                Reclamar esta Pista
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </CardHeader>
       <CardContent className="space-y-2 text-sm pt-2 flex-grow">
         <p className="text-muted-foreground h-16 overflow-hidden text-ellipsis">{track.description}</p>
         <div className="flex justify-between text-foreground pt-1">
           <span>Longitud: <span className="font-semibold">{track.length}</span></span>
-          <span>Curvas: <span className="font-semibold">{track.corners}</span></span>
+          {track.corners && <span>Curvas: <span className="font-semibold">{track.corners}</span></span>}
         </div>
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row gap-2 pt-4 items-stretch">
@@ -67,5 +108,4 @@ export function TrackCard({ track, onOpenResourcesModal }: TrackCardProps) {
     </Card>
   );
 }
-
     

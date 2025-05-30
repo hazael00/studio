@@ -11,10 +11,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'; // Added Dialog components
-import { ShoppingCart, Search, Package, Users, Globe, DraftingCompass, Info, X } from 'lucide-react';
-import type { Part, Supplier } from '@/types/parts';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ShoppingCart, Search, Package, Users, Globe, DraftingCompass, Info, X, Star, MessageSquare, Edit3 } from 'lucide-react';
+import type { Part, Supplier, Review } from '@/types/parts';
 import { PartCard } from '@/components/parts-catalog/part-card';
+
+const initialReviews: Review[] = [
+  { id: 'review-001', user: 'PilotoPro77', rating: 5, comment: '¡Increíble rendimiento! Vale cada centavo.', date: '2024-05-15', avatarHint: 'helmet visor' },
+  { id: 'review-002', user: 'KartMaster', rating: 4, comment: 'Muy buen motor, fácil de ajustar. El envío fue rápido.', date: '2024-05-10', avatarHint: 'race suit' },
+  { id: 'review-003', user: 'SpeedyGonzales', rating: 5, comment: 'Calidad superior, se nota la diferencia en la pista. Lo recomiendo.', date: '2024-05-20', avatarHint: 'kart steering wheel' }
+];
 
 const initialPartsData: Part[] = [
   {
@@ -31,6 +38,9 @@ const initialPartsData: Part[] = [
     compatibilityInfo: 'Compatible con chasis estándar Senior Max. Requiere batería y sistema de escape específicos.',
     technicalSpecs: { Bore: '54mm', Stroke: '54.5mm', Power: '30hp @ 11,500 RPM', Cooling: 'Water-cooled' },
     supplierIds: ['supplier-001', 'supplier-003'],
+    averageRating: 4.8,
+    reviews: initialReviews,
+    tags: ["High Performance", "Rotax Series"]
   },
   {
     id: 'chassis-001',
@@ -45,6 +55,9 @@ const initialPartsData: Part[] = [
     compatibilityInfo: 'Adecuado para motores OK, KZ, y Rotax. Diversas opciones de configuración de rigidez.',
     technicalSpecs: { TubingDiameter: '30mm/32mm', Wheelbase: '1045mm', AxleDiameter: '50mm' },
     supplierIds: ['supplier-002'],
+    averageRating: 4.5,
+    reviews: [initialReviews[0], initialReviews[1]],
+    tags: ["FIA Homologated", "Premium"]
   },
   {
     id: 'tires-001',
@@ -58,6 +71,9 @@ const initialPartsData: Part[] = [
     status: 'Pre-Order',
     technicalSpecs: { Compound: 'Medium', Type: 'Slick', FrontSize: '10x4.60-5', RearSize: '11x7.10-5' },
     supplierIds: ['supplier-001', 'supplier-002', 'supplier-003'],
+    averageRating: 4.2,
+    reviews: [initialReviews[2]],
+    tags: ["Rotax Max Challenge", "Durable"]
   },
   {
     id: 'brakes-001',
@@ -85,6 +101,7 @@ const initialPartsData: Part[] = [
     status: 'Discontinued',
     compatibilityInfo: 'Universal, requiere soportes específicos según el volante. Software de análisis MyChron disponible para PC.',
     supplierIds: ['supplier-003'],
+    tags: ["Data Acquisition", "GPS"]
   },
 ];
 
@@ -210,6 +227,19 @@ export default function PartsCatalogPage() {
       return matchesSearch && matchesRegion;
     });
   }, [searchTermSuppliers, selectedRegion]);
+  
+  const renderStars = (rating: number) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    return (
+      <div className="flex items-center">
+        {[...Array(fullStars)].map((_, i) => <Star key={`full-${i}`} className="w-5 h-5 text-yellow-400 fill-yellow-400" />)}
+        {halfStar && <Star key="half" className="w-5 h-5 text-yellow-400 fill-yellow-200" />} {/* Approximation of half star */}
+        {[...Array(emptyStars)].map((_, i) => <Star key={`empty-${i}`} className="w-5 h-5 text-yellow-400" />)}
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -234,13 +264,12 @@ export default function PartsCatalogPage() {
             <Image 
               src="https://placehold.co/1200x400.png" 
               alt="Visualizador 3D de Kart Placeholder" 
-              layout="fill" 
-              objectFit="cover" 
-              className="rounded-lg"
+              fill // Changed from layout="fill" objectFit="cover" to just fill
+              className="rounded-lg object-cover" // Ensure object-cover is present
               data-ai-hint="3d kart diagram"
             />
-            <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center rounded-lg">
-              <h3 className="text-2xl font-semibold text-background mb-2">Interacción 3D Próximamente</h3>
+            <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center rounded-lg p-4">
+              <h3 className="text-2xl font-semibold text-background mb-2 text-center">Interacción 3D Próximamente</h3>
               <p className="text-background/80 text-center max-w-md">
                 Estamos desarrollando una herramienta revolucionaria para que explores y configures karts en 3D.
               </p>
@@ -358,18 +387,24 @@ export default function PartsCatalogPage() {
                         {supplier.specialties?.map(spec => <Badge key={spec} variant="secondary" className="whitespace-nowrap">{spec}</Badge>)}
                       </div>
                     </TableCell>
-                    <TableCell>
+                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {supplier.servicesOffered?.map(serv => <Badge key={serv} variant="outline" className="whitespace-nowrap">{serv}</Badge>)}
                       </div>
                     </TableCell>
-                    <TableCell className="text-center">{supplier.rating ? supplier.rating.toFixed(1) + ' ⭐' : 'N/A'}</TableCell>
+                    <TableCell className="text-center">
+                      {supplier.rating ? (
+                        <div className="flex items-center justify-center gap-1">
+                          {supplier.rating.toFixed(1)} <Star className="w-4 h-4 text-yellow-400 fill-yellow-400"/>
+                        </div>
+                      ) : 'N/A'}
+                    </TableCell>
                     <TableCell className="text-right">
                       {supplier.website ? (
                         <Button variant="link" size="sm" asChild className="p-0 h-auto">
-                          <Link href={supplier.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
+                          <a href={supplier.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
                             <Globe className="mr-1 h-4 w-4" /> Visitar
-                          </Link>
+                          </a>
                         </Button>
                       ) : (
                         <span className="text-xs text-muted-foreground">No disponible</span>
@@ -392,80 +427,146 @@ export default function PartsCatalogPage() {
 
       {selectedPart && (
         <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
-          <DialogContent className="sm:max-w-2xl">
+          <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl">{selectedPart.name}</DialogTitle>
               <DialogDescription>{selectedPart.brand} - {selectedPart.category}</DialogDescription>
+                 {selectedPart.averageRating && (
+                    <div className="flex items-center gap-2 pt-1">
+                      {renderStars(selectedPart.averageRating)}
+                      <span className="text-sm text-muted-foreground">({selectedPart.averageRating.toFixed(1)} de {selectedPart.reviews?.length || 0} reseñas)</span>
+                    </div>
+                  )}
             </DialogHeader>
-            <div className="grid gap-6 py-4">
-              <div className="relative aspect-video w-full">
-                <Image 
-                  src={selectedPart.imageUrl} 
-                  alt={selectedPart.name} 
-                  layout="fill" 
-                  objectFit="contain" 
-                  className="rounded-md"
-                  data-ai-hint={selectedPart.imageHint}
-                />
-              </div>
-              <div>
-                <h4 className="font-semibold mb-1 text-lg">Descripción:</h4>
-                <p className="text-sm text-muted-foreground">{selectedPart.description}</p>
-              </div>
-
-              {selectedPart.technicalSpecs && Object.keys(selectedPart.technicalSpecs).length > 0 && (
-                <div>
-                  <h4 className="font-semibold mb-2 text-lg">Especificaciones Técnicas:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                    {Object.entries(selectedPart.technicalSpecs).map(([key, value]) => (
-                      <li key={key}><strong>{key}:</strong> {value}</li>
-                    ))}
-                  </ul>
+            <div className="grid md:grid-cols-2 gap-6 py-4">
+              <div className="space-y-4">
+                <div className="relative aspect-video w-full">
+                  <Image 
+                    src={selectedPart.imageUrl} 
+                    alt={selectedPart.name} 
+                    fill
+                    className="rounded-md object-contain"
+                    data-ai-hint={selectedPart.imageHint}
+                  />
                 </div>
-              )}
-
-              {selectedPart.compatibilityInfo && (
-                <div>
-                  <h4 className="font-semibold mb-1 text-lg">Compatibilidad:</h4>
-                  <p className="text-sm text-muted-foreground">{selectedPart.compatibilityInfo}</p>
-                </div>
-              )}
-              
-              {selectedPart.priceRange && (
-                <div>
-                  <h4 className="font-semibold mb-1 text-lg">Rango de Precio Estimado:</h4>
-                  <p className="text-lg font-bold text-primary">{selectedPart.priceRange}</p>
-                </div>
-              )}
-
-              {selectedPart.supplierIds && selectedPart.supplierIds.length > 0 && (
-                <div>
-                  <h4 className="font-semibold mb-2 text-lg">Proveedores Conocidos:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedPart.supplierIds.map(supplierId => {
-                      const supplier = initialSuppliersData.find(s => s.id === supplierId);
-                      return supplier ? (
-                        <Badge key={supplier.id} variant="secondary">
-                          {supplier.website ? (
-                            <a href={supplier.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                              {supplier.name}
-                            </a>
-                          ) : (
-                            supplier.name
-                          )}
-                        </Badge>
-                      ) : null;
-                    })}
+                {selectedPart.tags && selectedPart.tags.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold mb-1 text-md">Etiquetas:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedPart.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                    </div>
                   </div>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold mb-1 text-lg">Descripción:</h4>
+                  <p className="text-sm text-muted-foreground">{selectedPart.description}</p>
                 </div>
-              )}
-               <Badge 
-                  variant={selectedPart.status === 'Available' ? 'default' : selectedPart.status === 'Pre-Order' ? 'secondary' : 'destructive'} 
-                  className="w-fit text-sm py-1 px-3"
-                >
-                 {selectedPart.status}
-              </Badge>
+
+                {selectedPart.technicalSpecs && Object.keys(selectedPart.technicalSpecs).length > 0 && (
+                  <div>
+                    <h4 className="font-semibold mb-2 text-lg">Especificaciones Técnicas:</h4>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                      {Object.entries(selectedPart.technicalSpecs).map(([key, value]) => (
+                        <li key={key}><strong>{key}:</strong> {value}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {selectedPart.compatibilityInfo && (
+                  <div>
+                    <h4 className="font-semibold mb-1 text-lg">Compatibilidad:</h4>
+                    <p className="text-sm text-muted-foreground">{selectedPart.compatibilityInfo}</p>
+                  </div>
+                )}
+                
+                {selectedPart.priceRange && (
+                  <div>
+                    <h4 className="font-semibold mb-1 text-lg">Rango de Precio Estimado:</h4>
+                    <p className="text-lg font-bold text-primary">{selectedPart.priceRange}</p>
+                  </div>
+                )}
+                 <Badge 
+                    variant={selectedPart.status === 'Available' ? 'default' : selectedPart.status === 'Pre-Order' ? 'secondary' : 'destructive'} 
+                    className="w-fit text-sm py-1 px-3"
+                  >
+                   {selectedPart.status}
+                </Badge>
+              </div>
             </div>
+            
+            {selectedPart.supplierIds && selectedPart.supplierIds.length > 0 && (
+              <div className="py-4 border-t">
+                <h3 className="font-semibold mb-3 text-xl">Proveedores Conocidos y Precios (Ejemplo):</h3>
+                <div className="space-y-3">
+                  {selectedPart.supplierIds.map(supplierId => {
+                    const supplier = initialSuppliersData.find(s => s.id === supplierId);
+                    // Mock price - in reality this would come from supplier data
+                    const mockPrice = selectedPart.priceRange ? parseFloat(selectedPart.priceRange.split(" - ")[0].replace("$","")) * (1 + (Math.random() * 0.2 - 0.1)) : null;
+
+                    return supplier ? (
+                      <Card key={supplier.id} className="bg-muted/50 p-3">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-semibold text-md">{supplier.name}</p>
+                            <p className="text-xs text-muted-foreground">{supplier.region} - {supplier.country}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-md font-semibold text-primary">
+                              {mockPrice ? `$${mockPrice.toFixed(2)}` : "Consultar"}
+                            </p>
+                            {supplier.website && (
+                              <Button variant="link" size="sm" asChild className="p-0 h-auto text-xs">
+                                <a href={supplier.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
+                                  <Globe className="mr-1 h-3 w-3" /> Visitar
+                                </a>
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </Card>
+                    ) : null;
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="py-4 border-t">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-semibold text-xl flex items-center gap-2"><MessageSquare />Calificaciones y Reseñas</h3>
+                <Button variant="outline" disabled> <Edit3 className="mr-2 h-4 w-4" /> Escribir Reseña</Button>
+              </div>
+              {selectedPart.reviews && selectedPart.reviews.length > 0 ? (
+                <div className="space-y-4">
+                  {selectedPart.reviews.map(review => (
+                    <Card key={review.id} className="p-4">
+                      <div className="flex items-start gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={`https://placehold.co/40x40.png`} alt={review.user} data-ai-hint={review.avatarHint || "person avatar"} />
+                          <AvatarFallback>{review.user.substring(0,2).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <p className="font-semibold text-sm">{review.user}</p>
+                            <span className="text-xs text-muted-foreground">{new Date(review.date).toLocaleDateString()}</span>
+                          </div>
+                          <div className="flex items-center my-1">
+                            {renderStars(review.rating)}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{review.comment}</p>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">Aún no hay reseñas para esta pieza. ¡Sé el primero!</p>
+              )}
+            </div>
+
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsDetailModalOpen(false)}>
                 <X className="mr-2 h-4 w-4" /> Cerrar

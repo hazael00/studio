@@ -1,18 +1,31 @@
 
+export interface Review {
+  id: string;
+  user: string;
+  avatarUrl?: string;
+  avatarHint?: string;
+  rating: number; // 1-5
+  comment: string;
+  date: string; // ISO date string
+}
+
 export interface Part {
   id: string;
   name: string;
   description: string;
   category: 'Engine' | 'Chassis' | 'Tires' | 'Brakes' | 'Transmission' | 'Electronics' | 'Bodywork' | 'Other';
   brand: string;
-  partNumber?: string; // Added
+  partNumber?: string;
   priceRange?: string; // e.g., "$100 - $150" or "Consult"
   imageUrl: string;
   imageHint: string; // For Unsplash search, e.g., "kart engine"
-  status: 'Available' | 'Discontinued' | 'Pre-Order'; // Added
+  status: 'Available' | 'Discontinued' | 'Pre-Order';
   compatibilityInfo?: string; // Textual description of compatibility
   technicalSpecs?: Record<string, string>; // e.g., { "Weight": "5kg", "Material": "Aluminum" }
   supplierIds?: string[]; // IDs of suppliers who offer this part
+  averageRating?: number; // Optional: Average rating 1-5
+  reviews?: Review[]; // Optional: Array of reviews
+  tags?: string[]; // Optional: e.g., ["High Performance", "Budget Friendly"]
 }
 
 export interface Supplier {

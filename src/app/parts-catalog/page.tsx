@@ -5,10 +5,14 @@ import { useState, useMemo } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Wrench, Search, Package, Users } from 'lucide-react';
+import { Wrench, Search, Package, Users, Globe } from 'lucide-react';
 import type { Part, Supplier } from '@/types/parts';
 import { PartCard } from '@/components/parts-catalog/part-card';
-import { SupplierCard } from '@/components/parts-catalog/supplier-card';
+// import { SupplierCard } from '@/components/parts-catalog/supplier-card'; // No longer used here
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 const initialPartsData: Part[] = [
   {
@@ -120,6 +124,29 @@ const initialSuppliersData: Supplier[] = [
     rating: 4.2,
     servicesOffered: ['Trackside Support']
   },
+  {
+    id: 'supplier-004',
+    name: 'Asia Karting Supplies',
+    region: 'Asia',
+    country: 'Singapore',
+    city: 'Singapore',
+    website: 'https://asiakartsupplies.example.com',
+    specialties: ['Yamaha Engines', 'Birel ART Chassis'],
+    offersOnlineSales: true,
+    rating: 4.0,
+    servicesOffered: ['Online Sales', 'Regional Shipping']
+  },
+  {
+    id: 'supplier-005',
+    name: 'Down Under Karts',
+    region: 'Oceania',
+    country: 'Australia',
+    city: 'Melbourne',
+    specialties: ['Australian Kart Components', 'Safety Gear'],
+    offersOnlineSales: true,
+    rating: 4.3,
+    servicesOffered: ['Custom Suit Fitting', 'National Shipping']
+  }
 ];
 
 const partCategoryOptions = [
@@ -260,8 +287,51 @@ export default function PartsCatalogPage() {
           </div>
         </div>
         {filteredSuppliers.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredSuppliers.map(supplier => <SupplierCard key={supplier.id} supplier={supplier} />)}
+          <div className="overflow-x-auto bg-card rounded-lg shadow">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nombre</TableHead>
+                  <TableHead>Región</TableHead>
+                  <TableHead>País</TableHead>
+                  <TableHead>Especialidades</TableHead>
+                  <TableHead>Servicios</TableHead>
+                  <TableHead className="text-center">Rating</TableHead>
+                  <TableHead className="text-right">Sitio Web</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredSuppliers.map(supplier => (
+                  <TableRow key={supplier.id}>
+                    <TableCell className="font-medium">{supplier.name}</TableCell>
+                    <TableCell>{supplier.region}</TableCell>
+                    <TableCell>{supplier.country}{supplier.city ? `, ${supplier.city}` : ''}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {supplier.specialties?.map(spec => <Badge key={spec} variant="secondary" className="whitespace-nowrap">{spec}</Badge>)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {supplier.servicesOffered?.map(serv => <Badge key={serv} variant="outline" className="whitespace-nowrap">{serv}</Badge>)}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">{supplier.rating ? supplier.rating.toFixed(1) + ' ⭐' : 'N/A'}</TableCell>
+                    <TableCell className="text-right">
+                      {supplier.website ? (
+                        <Button variant="link" size="sm" asChild>
+                          <Link href={supplier.website} target="_blank" rel="noopener noreferrer">
+                            <Globe className="mr-1 h-4 w-4" /> Visitar
+                          </Link>
+                        </Button>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">No disponible</span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         ) : (
           <p className="text-center text-muted-foreground py-10">No se encontraron proveedores con los filtros seleccionados.</p>
@@ -270,3 +340,4 @@ export default function PartsCatalogPage() {
     </div>
   );
 }
+
